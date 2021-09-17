@@ -8,19 +8,18 @@ public class CourseList {
 
         listOfCourses = new Course[length];
         this.length = length;
+        size = 0;
     }
 
     public CourseList() {
-
         length = 10;
         Course newCourse;
         listOfCourses = new Course[length];
-
         for (int i = 0; i < (length >> 1); i++) {
             newCourse = new Course();
             listOfCourses[i] = newCourse;
+            size++;
         }
-
     }
 
     public int getSize() {
@@ -46,15 +45,20 @@ public class CourseList {
         return courseListToString;
     }
 
-    void shiftCourse(int start, int end) {
-        for (int i = end - 1; i > start; i--) {
+    void shiftCourseLeft(int start, int end) {
+        for (int i = start + 1; i < end + 1; i++) {
+            listOfCourses[i - 1] = listOfCourses[i];
+        }
+    }
+
+    void shiftCourseRight(int start, int end) {
+        for (int i = end - 1; i > start - 1; i--) {
             listOfCourses[i + 1] = listOfCourses[i];
         }
     }
 
     void addCourse(int i, Course course) {
 
-        System.out.println(i + " " + getSize());
         int j = 0;
         if (i < 0) {
 
@@ -67,7 +71,7 @@ public class CourseList {
 
             j = getSize();
         } else {
-            j = i - 1;
+            j = i;
         }
 
         System.out.println("Course added before index " + j + ".");
@@ -75,17 +79,44 @@ public class CourseList {
         System.out.println(courseListToString());
 
         size++;
-        shiftCourse(j, getSize());
+        shiftCourseRight(j, getSize());
         listOfCourses[j] = course;
         System.out.println("List after operation");
         System.out.println(courseListToString());
     }
-    /*
-     * boolean removeCourse(int i){ size--; if(i < 0){
-     * System.out.println("Failed to remove element. You gave a negative index");
-     * return false; } else if(i) }
-     * 
-     */
+
+    boolean removeCourse(int i) {
+
+        if (i < 0) {
+            System.out.println("Failed to remove element. You gave a negative index");
+            return false;
+        } else if (i > size) {
+            System.out.println("Failed to remove element. You gave an index larger than amount of elements");
+            return false;
+        }
+
+        System.out.println("Course removed at index " + i + ".");
+        System.out.println(courseListToString());
+
+        size--;
+        shiftCourseLeft(i, getSize());
+        System.out.println("List after operation");
+        System.out.println(courseListToString());
+
+        return true;
+    }
+
+    boolean changeCapacity(String courseID, int capacity){
+
+        int index = SearchCourseID(courseID);
+        if (index == -1){
+            return false;
+        }
+        
+        listOfCourses[index].setCapacity(capacity);
+
+        return true;
+    }
 
     Course getCourseWithIndex(int i) {
 
@@ -97,5 +128,23 @@ public class CourseList {
             return null;
         }
         return listOfCourses[i];
+    }
+
+    int SearchCourseID(String courseID) {
+        for (int i = 0; i < getSize(); i++) {
+            if (0 == courseID.compareTo(getCourseWithIndex(i).getID())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    int SearchCourseName(String courseName) {
+        for (int i = 0; i < getSize(); i++) {
+            if (0 == courseName.compareTo(getCourseWithIndex(i).getName())) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

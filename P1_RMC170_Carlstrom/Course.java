@@ -33,19 +33,33 @@ public class Course {
         capacity = classSize;
     }
 
-    // Update the ID of a course
+    // Set the ID of a course
     void setID(String ID) {
         courseID = ID;
     }
 
-    // Update the capacity of a course
+    // Set the capacity of a course
     void setCapacity(int size) {
         capacity = size;
     }
 
-    // Update the name of a course
+    // Set the name of a course
     void setName(String name) {
         courseName = name;
+    }
+     // Get the ID of a course
+     String getID() {
+        return courseID;
+    }
+
+    // Get the capacity of a course
+    int getCapacity() {
+        return capacity;
+    }
+
+    // Get the name of a course
+    String getName() {
+        return courseName;
     }
 
     // Course turned into string
