@@ -25,6 +25,7 @@ public class Course {
                 "Independent Projects", "Special Topics" };
         int classSize, courseIDnumber;
 
+        // randomnization of Courses
         classSize = (int) (Math.random() * 100);
         courseIDnumber = (int) (Math.random() * courseIDList.length);
 
