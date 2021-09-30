@@ -52,25 +52,12 @@ public class CustomQStack<E> {
 
     // pushes an element onto the stack
     public E push(E e) {
-
-        /*
-        if (isEmpty()) {
-            queue.add(e);
-            return e;
-        }
-        E head = queue.peek();
-
-        do {
-            queue.add(queue.poll());
-        } while (head != queue.peek());
-        */
         queue.add(e);
         return e;
     }
 
     // basic toString method for the Stack
     public String toString() {
-
         return queue.toString();
     }
 
