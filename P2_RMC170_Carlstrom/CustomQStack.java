@@ -22,55 +22,56 @@ public class CustomQStack<E> {
     // Pops the tail off the stack
     public E pop() {
 
-        reverseQueue();
-        E removedElement = queue.poll();
-        reverseQueue();
-
-        return removedElement;
-    }
-
-    // reverses the queue
-    public void reverseQueue() {
-
-        Stack<E> stack = new Stack<E>();
-
-        while (!queue.isEmpty()) {
-            stack.push(queue.poll());
+        if(isEmpty()){
+            return null;
         }
 
-        while (!stack.isEmpty()) {
-            queue.add(stack.pop());
+        Queue<E> temp = new LinkedList<E>();
+        temp = (Queue<E>) ((LinkedList<E>) queue).clone();
+        temp.poll();
+        if(temp.peek()==null){
+            return queue.poll();
         }
 
+        E startingHead = queue.peek();
+        
+        do{
+
+            shuffle();
+            temp = (Queue<E>) ((LinkedList<E>) queue).clone();
+            temp.poll();
+           
+        }
+        while(temp.peek() != startingHead);
+        return queue.poll();
+    }
+    
+    public void shuffle(){
+        queue.add(queue.poll());
     }
 
-    //pushes an element onto the stack
+    // pushes an element onto the stack
     public E push(E e) {
+
+        /*
+        if (isEmpty()) {
+            queue.add(e);
+            return e;
+        }
+        E head = queue.peek();
+
+        do {
+            queue.add(queue.poll());
+        } while (head != queue.peek());
+        */
         queue.add(e);
         return e;
     }
 
-    //basic toString method for the Stack
+    // basic toString method for the Stack
     public String toString() {
 
-        //default case
-        if (isEmpty()) {
-            return "[]";
-        }
-
-        StringBuilder s = new StringBuilder("[");
-        Queue<E> saved = (Queue<E>) ((LinkedList<E>) queue).clone();
-
-        reverseQueue();
-
-        while (!isEmpty()) {
-            s.append(pop() + ", ");
-        }
-
-        //restores the queue  
-        queue = saved;
-
-        return s.replace(s.length() - 2, s.length(), "]").toString();
+        return queue.toString();
     }
 
 }

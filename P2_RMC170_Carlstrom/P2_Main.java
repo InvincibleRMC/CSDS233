@@ -18,8 +18,11 @@ public class P2_Main {
         System.out.println("Part 2B a)");
         CustomQStack<Integer> stack = new CustomQStack<Integer>();
 
+        System.out.println(stack.toString());
+        
         for(int i =1; i<5; i++){
             stack.push(i);
+            System.out.println(stack.toString());
         }
 
         System.out.println(stack.toString());
@@ -34,6 +37,10 @@ public class P2_Main {
         System.out.println(stack.toString());
         System.out.println(stack.isEmpty());
         stack.push(123);
+        System.out.println(stack.toString());
+        stack.push(246);
+        System.out.println(stack.toString());
+        stack.pop();
         System.out.println(stack.toString());
 
         System.out.println("Part 2B b)");
