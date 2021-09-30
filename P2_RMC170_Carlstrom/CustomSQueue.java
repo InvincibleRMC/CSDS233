@@ -8,7 +8,7 @@ public class CustomSQueue<E> {
     public CustomSQueue() {
 
         stack1 = new Stack<E>();
-        stack2 = new Stack<E>();;
+        stack2 = new Stack<E>();
 
     }
 
@@ -48,14 +48,16 @@ public class CustomSQueue<E> {
         StringBuilder s = new StringBuilder("[");
 
         
-        Stack<E> old = new Stack<E>();
-        old = (Stack<E>) stack1.clone();
+        Stack<E> saved = (Stack<E>) stack1.clone();
+        
 
         while(!stack1.empty()){
             s.append(poll()+", ");
         }
 
-        stack1=old;
+        stack1=saved;
+
+        
         return s.replace(s.length()-2,s.length(),"]").toString();
     }
 

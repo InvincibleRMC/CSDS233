@@ -1,96 +1,113 @@
 package P2_RMC170_Carlstrom;
 
-/**
- * javac -Xlint ReverseLinkList.java && java ReverseLinkList
- */
 public class ReverseLinkList<E> {
+
     private E element;
     private ReverseLinkList<E> next;
 
-    /**
-     * Make a new ReverseLinkList contaning element e to start.
-     */
+    // reverseLinkList constructor
     public ReverseLinkList(E element) {
         setElement(element);
         this.next = null;
     }
 
+    // getter for E
     public E getElement() {
-        return this.element;
+        return element;
     }
 
+    // setter for E
     public void setElement(E element) {
         this.element = element;
     }
 
-    /**
-     * Pushes a new value on the front of the ReverseLinkList, returning the new head of the ReverseLinkList.
-     */
-    public ReverseLinkList<E> push(E element) {
-        ReverseLinkList<E> ReverseLinkList = new ReverseLinkList<E>(element);
-        ReverseLinkList.next = this;
-        return ReverseLinkList;
-    }
-
-    /**
-     * Appends a new value to the end of the ReverseLinkList.
-     */
+    // attaches element to end of the linked list
     public void append(E element) {
         append(this, element);
     }
 
-    /**
-     * Appends a new value to the end of the provided ReverseLinkList, which may be null.
-     */
-    public static <E> ReverseLinkList<E> append(ReverseLinkList<E> ReverseLinkList, E element) {
-        // try to find the end, we set previous to null to start and
-        // if it remains null, we know we had an empty "null" ReverseLinkList to
-        // start
+    // attaches an element to the end of the linked list
+    public static <E> ReverseLinkList<E> append(ReverseLinkList<E> list, E element) {
+
         ReverseLinkList<E> previous = null;
-        ReverseLinkList<E> tail = ReverseLinkList;
+        ReverseLinkList<E> tail = list;
+
+        // goes to the end to attach element
         while (tail != null) {
             previous = tail;
             tail = tail.next;
         }
 
-        // uncondintionally create the new element
+        // create new end element
         ReverseLinkList<E> end = new ReverseLinkList<E>(element);
         if (previous == null) {
-            return end; // this is the only one, and its the new ReverseLinkList
+            return end;
         }
+        // set end to be null
         previous.next = end;
-        return ReverseLinkList; // return original ReverseLinkList.
+        return list;
     }
 
-    public String reverseToString() {
+    // reverse linked list
+    public void reverse() {
 
-        String reversedLinkedList = "]";
-        ReverseLinkList<E> reverseLinkList = this;
-
-        if(reverseLinkList == null){
-            return "[]";
+        // saved for later, see below.
+        ReverseLinkList<E> second = this.next;
+        // null cases
+        if (second == null) {
+            return;
         }
 
-        while (reverseLinkList.next != null) {
-            reversedLinkedList = ", "+String.valueOf(reverseLinkList.getElement()) + reversedLinkedList;
-            reverseLinkList = reverseLinkList.next;
+        // old and reversed linked list creation
+        ReverseLinkList<E> old = this;
+        ReverseLinkList<E> reversed = null;
+
+        // proceed through old and flip the pointers within old
+        while (old != null) {
+            ReverseLinkList<E> node = old;
+            old = old.next;
+            node.next = reversed;
+            reversed = node;
         }
-        return "[" +reverseLinkList.getElement()+ reversedLinkedList ;
+
+        // linked lists need for header swap
+        ReverseLinkList<E> nextToLast = second;
+        ReverseLinkList<E> newLast = reversed;
+        ReverseLinkList<E> newSecond = reversed.next;
+
+        // now the pointer swap
+
+        // terminate the list
+        newLast.next = null;
+        // attach to the end
+        nextToLast.next = newLast;
+        // attach to the new head;
+        this.next = newSecond;
+        // now the value head/tail values
+        E tmp = this.getElement();
+        this.setElement(newLast.getElement());
+        newLast.setElement(tmp);
     }
 
+    // to string method for the reverse linked list
     public String toString() {
+        // create string builder
         StringBuilder stringBuilder = new StringBuilder("[");
-        ReverseLinkList<E> ReverseLinkList = this;
-        while (ReverseLinkList != null) {
-            stringBuilder.append(String.valueOf(ReverseLinkList.getElement()));
-            if (ReverseLinkList.next != null) {
+        // makes duplicate
+        ReverseLinkList<E> list = this;
+
+        // proceed throught the linked list and creates string from elements
+        while (list != null) {
+            stringBuilder.append(String.valueOf(list.getElement()));
+            if (list.next != null) {
                 stringBuilder.append(", ");
             }
-            ReverseLinkList = ReverseLinkList.next;
+            list = list.next;
         }
+
         stringBuilder.append(']');
+        // returns string
         return stringBuilder.toString();
     }
-
 
 }
