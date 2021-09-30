@@ -46,21 +46,7 @@ public class CustomSQueue<E> {
 
     //basic toString for Queue
     public String toString(){
-
-        StringBuilder s = new StringBuilder("[");
-
-        Stack<E> saved = (Stack<E>) stack1.clone();
-        
-
-        //runs through the stack
-        while(!stack1.empty()){
-            s.append(poll()+", ");
-        }
-
-        //restores the stack
-        stack1=saved;
-
-        return s.replace(s.length()-2,s.length(),"]").toString();
+        return stack1.toString();
     }
 
 }
