@@ -8,16 +8,18 @@ public class CustomQStack<E> {
 
     private Queue<E> queue;
 
+    // default constructor
     public CustomQStack() {
         queue = new LinkedList<E>();
     }
 
+    // returns true if Stack is empty
     public boolean isEmpty() {
-
         return queue.peek() == null;
 
     }
 
+    // Pops the tail off the stack
     public E pop() {
 
         reverseQueue();
@@ -27,6 +29,7 @@ public class CustomQStack<E> {
         return removedElement;
     }
 
+    // reverses the queue
     public void reverseQueue() {
 
         Stack<E> stack = new Stack<E>();
@@ -41,18 +44,20 @@ public class CustomQStack<E> {
 
     }
 
+    //pushes an element onto the stack
     public void push(E e) {
         queue.add(e);
     }
 
+    //basic toString method for the Stack
     public String toString() {
 
+        //default case
         if (isEmpty()) {
             return "[]";
         }
 
         StringBuilder s = new StringBuilder("[");
-
         Queue<E> saved = (Queue<E>) ((LinkedList<E>) queue).clone();
 
         reverseQueue();
@@ -61,6 +66,7 @@ public class CustomQStack<E> {
             s.append(pop() + ", ");
         }
 
+        //restores the queue
         queue = saved;
 
         return s.replace(s.length() - 2, s.length(), "]").toString();

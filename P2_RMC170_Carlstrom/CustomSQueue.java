@@ -5,6 +5,7 @@ import java.util.Stack;
 public class CustomSQueue<E> {
     private Stack<E> stack1,stack2;
 
+    //default constructor
     public CustomSQueue() {
 
         stack1 = new Stack<E>();
@@ -31,7 +32,7 @@ public class CustomSQueue<E> {
             stack2.push(stack1.pop());
         }
 
-        
+        // removes element
         removedElement = stack2.pop();
 
         while (!stack2.empty()) {
@@ -43,21 +44,22 @@ public class CustomSQueue<E> {
         return removedElement;
     }
 
+    //basic toString for Queue
     public String toString(){
 
         StringBuilder s = new StringBuilder("[");
 
-        
         Stack<E> saved = (Stack<E>) stack1.clone();
         
 
+        //runs through the stack
         while(!stack1.empty()){
             s.append(poll()+", ");
         }
 
+        //restores the stack
         stack1=saved;
 
-        
         return s.replace(s.length()-2,s.length(),"]").toString();
     }
 
