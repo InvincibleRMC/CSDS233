@@ -45,8 +45,9 @@ public class CustomQStack<E> {
     }
 
     //pushes an element onto the stack
-    public void push(E e) {
+    public E push(E e) {
         queue.add(e);
+        return e;
     }
 
     //basic toString method for the Stack
@@ -66,7 +67,7 @@ public class CustomQStack<E> {
             s.append(pop() + ", ");
         }
 
-        //restores the queue
+        //restores the queue  
         queue = saved;
 
         return s.replace(s.length() - 2, s.length(), "]").toString();
