@@ -6,7 +6,7 @@ public class phoneBook{
 public phoneBook(){
     lengthOfPhoneBook = 10;
     phoneBookData = new String[lengthOfPhoneBook];
-    lastFullSpace = 3
+    lastFullSpace = 3;
     phoneBookData[0] = "lel";
     phoneBookData[1] = "hi";
     phoneBookData[2] = "yeehaw";
@@ -15,16 +15,16 @@ public phoneBook(){
 
 public String getData(int position){
 
-    return phoneBookData[position]
+    return phoneBookData[position];
 }
 
 
 
-public void addData(String phoneName)
+public void addData(String phoneName){
 
 phoneBookData[lastFullSpace] = phoneName;
 
 lastFullSpace++;
-
+}
 
 }

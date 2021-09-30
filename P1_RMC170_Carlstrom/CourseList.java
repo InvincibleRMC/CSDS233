@@ -1,3 +1,5 @@
+package P1_RMC170_Carlstrom;
+
 public class CourseList {
 
     // Initialization of variables
