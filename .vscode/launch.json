@@ -6,45 +6,25 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch ReverseLinkList",
-            "request": "launch",
-            "mainClass": "P2_RMC170_Carlstrom.ReverseLinkList",
-            "projectName": "CSDS233_8b5409d7"
-        },
-        {
-            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
         },
+        
         {
             "type": "java",
-            "name": "Launch main",
+            "name": "Launch P2_Main",
             "request": "launch",
-            "mainClass": "P1_RMC170_Carlstrom.main",
+            "mainClass": "P2_RMC170_Carlstrom.P2_Main",
             "projectName": "CSDS233_98339771"
         },
         {
             "type": "java",
-            "name": "Launch CustomQStack",
+            "name": "Launch ReverseLinkList",
             "request": "launch",
-            "mainClass": "P2_RMC170_Carlstrom.CustomQStack",
+            "mainClass": "P2_RMC170_Carlstrom.ReverseLinkList",
             "projectName": "CSDS233_98339771"
-            
         },
-        {
-            "type": "java",
-            "name": "Launch Problem1Main",
-            "request": "launch",
-            "mainClass": "P2_RMC170_Carlstrom.Problem1Main",
-            "projectName": "CSDS233_8b5409d7"
-        },
-        {
-            "type": "java",
-            "name": "Launch main2",
-            "request": "launch",
-            "mainClass": "main2",
-            "projectName": "CSDS233_8b5409d7"
-        }
+        
     ]
 }

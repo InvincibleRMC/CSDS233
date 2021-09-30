@@ -4,7 +4,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 import javax.lang.model.element.Element;
 
-public class CustomQStack<E> implements Queue<E> {
+public class CustomQStack<E>  {
 
     private Queue<E> stack; 
     
@@ -32,13 +32,9 @@ public class CustomQStack<E> implements Queue<E> {
 
     }
 
-    public static void main(String[] args) {
+   // public String toString(){
+        
+    //}
 
-        CustomQStack<Integer> customStack = new CustomQStack<Integer>();
-
-        customStack.push(1);
-        customStack.push(2);
-        customStack.push(3);
-
-    }
+    
 }

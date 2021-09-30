@@ -92,10 +92,5 @@ public class ReverseLinkList<E> {
         return stringBuilder.toString();
     }
 
-    public static final void main(String[] args) {
-        ReverseLinkList<Integer> lst = new ReverseLinkList<Integer>(9).push(13).push(56).push(37).push(44);
-        System.out.println(lst.toString());
-        
-        System.out.println(lst.reverseToString());
-    }
+
 }
