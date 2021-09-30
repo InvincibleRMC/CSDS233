@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch ReverseLinkList",
+            "request": "launch",
+            "mainClass": "P2_RMC170_Carlstrom.ReverseLinkList",
+            "projectName": "CSDS233_8b5409d7"
+        },
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch main",
+            "request": "launch",
+            "mainClass": "P1_RMC170_Carlstrom.main",
+            "projectName": "CSDS233_8b5409d7"
+        },
+        {
+            "type": "java",
+            "name": "Launch Problem1Main",
+            "request": "launch",
+            "mainClass": "P2_RMC170_Carlstrom.Problem1Main",
+            "projectName": "CSDS233_8b5409d7"
+        },
+        {
+            "type": "java",
+            "name": "Launch main2",
+            "request": "launch",
+            "mainClass": "main2",
+            "projectName": "CSDS233_8b5409d7"
+        }
+    ]
+}

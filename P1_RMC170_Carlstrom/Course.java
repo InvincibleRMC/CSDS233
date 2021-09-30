@@ -1,3 +1,5 @@
+package P1_RMC170_Carlstrom;
+
 public class Course {
     // ID for Course and Name of course
     private String courseID, courseName;
