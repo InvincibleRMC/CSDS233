@@ -22,10 +22,13 @@ public class CustomQStack<E> {
     // Pops the tail off the stack
     public E pop() {
 
+        // base case for an empty Queue
         if(isEmpty()){
             return null;
         }
 
+
+        // case for a Queue with one element
         Queue<E> temp = new LinkedList<E>();
         temp = (Queue<E>) ((LinkedList<E>) queue).clone();
         temp.poll();
@@ -33,8 +36,8 @@ public class CustomQStack<E> {
             return queue.poll();
         }
 
+        // case for a Queue with n > 1 elememts
         E startingHead = queue.peek();
-        
         do{
 
             shuffle();
@@ -46,6 +49,7 @@ public class CustomQStack<E> {
         return queue.poll();
     }
     
+    // shuffles the queue by 1
     public void shuffle(){
         queue.add(queue.poll());
     }
