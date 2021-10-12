@@ -5,6 +5,7 @@ public class P2_Main {
     
     public static void main(String[] args) {
 
+        //test for 2A
         System.out.println("Part 2A");
         ReverseLinkList<Integer> lst = new ReverseLinkList<Integer>(9);
         lst.append(9);
@@ -15,6 +16,7 @@ public class P2_Main {
         lst.reverse();
         System.out.println(lst);
 
+        // test 2B a)
         System.out.println("Part 2B a)");
         CustomQStack<Integer> stack = new CustomQStack<Integer>();
 
@@ -42,6 +44,7 @@ public class P2_Main {
         stack.pop();
         System.out.println(stack.toString());
 
+        // test 2b B)
         System.out.println("Part 2B b)");
         CustomSQueue<Integer> queue = new CustomSQueue<Integer>();
 
