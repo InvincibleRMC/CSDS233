@@ -51,6 +51,17 @@ public class Node {
         key = newKey;
     }
 
+    // set children to null when not given an input
+    public void setLeft() {
+        left = null;
+    }
+
+    public void setRight() {
+        right = null;
+    }
+
+    
+
     public String toString() {
         return "key: " + key;
     }
