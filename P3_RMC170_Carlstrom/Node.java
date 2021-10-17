@@ -9,20 +9,16 @@ public class Node {
 
     // Node Object
     public Node(Node left, Node right, int key) {
-
         this.left = left;
         this.right = right;
         this.key = key;
-
     }
 
     // Node Object without children
     public Node(int key) {
-
-        left = null;
-        right = null;
+        this.left = null;
+        this.right = null;
         this.key = key;
-
     }
 
     // Node getters
@@ -51,19 +47,7 @@ public class Node {
         key = newKey;
     }
 
-    // set children to null when not given an input
-    public void setLeft() {
-        left = null;
-    }
-
-    public void setRight() {
-        right = null;
-    }
-
-    
-
     public String toString() {
         return "key: " + key;
     }
-
 }

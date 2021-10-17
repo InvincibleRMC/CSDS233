@@ -6,180 +6,162 @@ public class BinarySearchTree {
 
     private Node head;
 
-    // standard constructor
-    public BinarySearchTree(int key) {
-
-        head = new Node(null, null, key);
-
+    /**
+     * Default constructor to create an empty tree
+     */
+    public BinarySearchTree() {
     }
 
-    public Node getHead() {
-        return head;
+    // Insertation
+    public void insert(int key) {
+        head = insert(head, key);
     }
 
-    // Finds the node directly before the current Node
-    public Node getMinimumKey(Node trav) {
+    /**
+     * Inserts a node into a tree rooted at root, which may be
+     * null. Returns the root, which maybe new.
+     */
+    private static Node insert(Node root, int key) {
+        // Empty tree, return the new root.
+        if (root == null) {
+            return new Node(key);
+        }
+
+        Node parent = null;
+        Node trav = root;
+
+        while (trav != null) {
+            parent = trav;
+            if (key < trav.getKey()) {
+                trav = trav.getLeft();
+            } else {
+                trav = trav.getRight();
+            }
+        }
+        if (key < parent.getKey()) {
+            parent.setLeft(new Node(key));
+        } else {
+            parent.setRight(new Node(key));
+        }
+        // Non-empty tree, just return the old root.
+        return root;
+    }
+
+    // Search with the head
+    public boolean search(int key) {
+        return (search(head, key) != null);
+    }
+
+    // Generic search
+    private static Node search(Node root, int key) {
+        Node trav = root;
+        while (trav != null) {
+            if (key < trav.getKey()) {
+                trav = trav.getLeft();
+            } else if (key > trav.getKey()) {
+                trav = trav.getRight();
+            } else { // must be ==
+                return trav;
+            }
+        }
+        return null;
+    }
+
+    // Delete with the head
+    public void delete(int key) {
+        head = delete(head, key);
+    }
+
+    /**
+     * Deletes a node from a tree rooted at root, which may be
+     * null. Returns the root, which may have become null.
+     */
+    private static Node delete(Node root, int key) {
+
+        // search to find find pointers to key node and its parent, if any
+        Node parent = null;
+        Node trav = root;
+        while (trav != null && trav.getKey() != key) {
+            parent = trav;
+            if (key < trav.getKey()) {
+                trav = trav.getLeft();
+            } else if (key > trav.getKey()) {
+                trav = trav.getRight();
+            }
+        }
+        // key wasn't found, just return existing root
+        if (trav == null) {
+            return root;
+        }
+
+        // Case of node with no children
+        if (trav.getLeft() == null && trav.getRight() == null) {
+            // if the node is the root, return null as the new root.
+            if (trav == root) {
+                return null;
+            }
+            // otherwise null out the appropriate child in the parent to remove it
+            if (parent.getLeft() == trav) {
+                parent.setLeft(null);
+            } else {
+                parent.setRight(null);
+            }
+            return root;
+        }
+
+        // Case of node with 2 children
+        if (trav.getLeft() != null && trav.getRight() != null) {
+            // find logical successor
+            Node succesor = findMinimum(trav.getLeft());
+            // save the value
+            int tmp = succesor.getKey();
+            // recusively delete
+            delete(root, tmp);
+            // restore the saved value
+            trav.setKey(tmp);
+            return root;
+        }
+
+        // Case of node with 1 child
+        Node child = (trav.getLeft() != null) ? trav.getLeft() : trav.getRight();
+        // we are at the root, replace the root with the child
+        if (trav == root) {
+            return child;
+        }
+        // replace the current node with child in the parent
+        if (trav == parent.getLeft()) {
+            parent.setLeft(child);
+        } else {
+            parent.setRight(child);
+        }
+        return root;
+    }
+
+    /**
+     * Finds the node with the minimum value rooted at trav
+     */
+    private static Node findMinimum(Node trav) {
         while (trav.getRight() != null) {
             trav = trav.getRight();
         }
         return trav;
     }
 
-    private int getSize() {
-        if (head == null) {
+    // Finds sum for head
+    public int sum() {
+        return sum(head);
+    }
+
+    // Finds sum of any node
+    private static int sum(Node root) {
+        if (root == null) {
             return 0;
-        }
-
-        int counter = 0;
-        Stack<Node> nodeStack = new Stack<Node>();
-        Node myNode = head;
-
-        while (myNode != null || nodeStack.size() > 0) {
-
-            while (myNode != null) {
-                nodeStack.push(myNode);
-                myNode = myNode.getLeft();
-            }
-            myNode = nodeStack.pop();
-            counter++;
-
-            myNode = myNode.getRight();
-
-        }
-        return counter;
-    }
-
-    
-
-    public Node insert(Node root, int key) {
-
-        Node parent = null;
-        Node trav = root;
-
-        while (trav != null) {
-            parent = trav;
-            if (key < trav.getKey())
-                trav = trav.getLeft();
-            else
-                trav = trav.getRight();
-        }
-
-        if (parent == null)
-            head = root;
-        else if (key < parent.getKey())
-            parent.setLeft(new Node(key));
-        else
-            parent.setRight(new Node(key));
-
-        return root;
-    }
-
-    public Node search(Node root, int key) {
-
-        Node trav = root;
-
-        while (trav != null) {
-
-            if (key < trav.getKey())
-                trav = trav.getLeft();
-            else if (key > trav.getKey())
-                trav = trav.getRight();
-            else
-                return trav;
-
-        }
-
-        return null;
-    }
-
-    public Node delete(Node root, int key) {
-
-        Node parent = null;
-        Node trav = root;
-
-        while (trav != null && trav.getKey() != key) {
-
-            parent = trav;
-            if (key < trav.getKey())
-                trav = trav.getLeft();
-            else if (key > trav.getKey())
-                trav = trav.getRight();
-
-        }
-
-        if (trav == null) {
-            return null;
-        }
-
-        return deletionLogic(parent, trav);
-
-    }
-
-    public Node deletionLogic(Node parent, Node trav) {
-
-        // Node has no children
-        if (trav.getLeft() == null && trav.getRight() == null) {
-
-            if (trav != head) {
-                if (parent.getLeft() == trav) {
-                    parent.setLeft();
-                } else {
-                    parent.setRight();
-                }
-            }
-
-            // Case for a tree with one element
-            else {
-                head = null;
-            }
-        }
-
-        // Node has 2 children case
-        else if (trav.getLeft() != null && trav.getRight() != null) {
-
-            Node succesor = getMinimumKey(trav.getLeft());
-
-            int val = succesor.getKey();
-
-            delete(head, val);
-
-            trav.setKey(val);
-
-        }
-
-        // Node has 1 child case
-        else {
-
-            Node child = (trav.getLeft() != null) ? trav.getLeft() : trav.getRight();
-
-            if (trav != head) {
-                if (trav == parent.getLeft()) {
-                    parent.setLeft(child);
-                } else {
-                    parent.setRight(child);
-                }
-            }
-            // When deleting the head of the tree with one child
-            else {
-                head = child;
-            }
-
-        }
-
-        return trav;
-    }
-
-    public int sum(Node root) {
-
-        if (head == null) {
-            return (Integer) null;
         }
 
         Stack<Node> nodeStack = new Stack<Node>();
         Node myNode = root;
 
         int sum = 0;
-
         while (myNode != null || nodeStack.size() > 0) {
 
             while (myNode != null) {
@@ -188,17 +170,20 @@ public class BinarySearchTree {
             }
             myNode = nodeStack.pop();
             sum += myNode.getKey();
-
             myNode = myNode.getRight();
-
         }
-
         return sum;
     }
 
-    public void inorder(Node root) {
-
-        if (head == null) {
+    // Note these methods are strange and only exist because the prompt requests them
+    // toStringInorder() is more logical
+    // Inorder traversal with head
+    public void inorder() {
+        inorder(head);
+    }
+    // Generic Inorder traversal
+    private static void inorder(Node root) {
+        if (root == null) {
             return;
         }
 
@@ -206,33 +191,37 @@ public class BinarySearchTree {
         Node myNode = root;
 
         while (myNode != null || nodeStack.size() > 0) {
-
             while (myNode != null) {
                 nodeStack.push(myNode);
                 myNode = myNode.getLeft();
             }
             myNode = nodeStack.pop();
-
             myNode = myNode.getRight();
-
         }
     }
 
-    public Node kthSmallest(Node root, int k) {
-
-        if (head == null) {
-            
+    // Returns the key of the kth smallest node 
+    public Integer kthSmallest(int k) {
+        if (k <= 0) {
             return null;
         }
-        if (k > getSize()) {
-            
+        Node trav = kthSmallest(head, k);
+        if (trav == null) {
+            return null;
+        }
+        return trav.getKey();
+    }
+
+    // finds the kth smallest node
+    private static Node kthSmallest(Node root, int k) {
+        if (k > getSize(root)) {
             return null;
         }
 
         Stack<Node> nodeStack = new Stack<Node>();
         Node myNode = root;
 
-        int counter =0 ;
+        int counter = 0;
 
         while (myNode != null || nodeStack.size() > 0) {
 
@@ -242,17 +231,39 @@ public class BinarySearchTree {
             }
             myNode = nodeStack.pop();
             counter++;
-            if(counter >= k){
+            if (counter >= k){
                 return myNode;
             }
 
             myNode = myNode.getRight();
-            
-            }
+        }
 
-         return myNode;
+        return myNode;
     }
 
+    // gets the size of the tree.
+    private static int getSize(Node root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int counter = 0;
+        Stack<Node> nodeStack = new Stack<Node>();
+        Node myNode = root;
+        while (myNode != null || nodeStack.size() > 0) {
+            while (myNode != null) {
+                nodeStack.push(myNode);
+                myNode = myNode.getLeft();
+            }
+            myNode = nodeStack.pop();
+            counter++;
+            myNode = myNode.getRight();
+
+        }
+        return counter;
+    }
+
+    // returns the tree in a String traversed by pre-order
     public String toStringPreorder() {
 
         if (head == null) {
@@ -287,6 +298,7 @@ public class BinarySearchTree {
         return str.toString();
     }
 
+    // returns the tree in a String traversed by post-order
     public String toStringPostorder() {
 
         if (head == null) {
@@ -324,6 +336,7 @@ public class BinarySearchTree {
         return str.toString();
     }
 
+    // returns the tree in a String traversed by In-order
     public String toStringInorder() {
 
         if (head == null) {
