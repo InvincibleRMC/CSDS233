@@ -2,144 +2,181 @@ package P4_RMC170_Carlstrom;
 
 public class HashTable {
 
+    // Entry Class
+    // Linked List
     public class Entry {
-        private String key;
-        private int count;
+        // Instaniate Variables
+        private Object key;
+        private Object value;
         public Entry next;
 
-        public Entry(String key) {
+        // Basic Constructor
+        public Entry(Object key, Object value) {
             this.key = key;
-            count = 1;
-            next = null;
+            this.value = value;
         }
 
-        public int increase() {
-            count++;
-            return count;
-        }
-
-        public String getKey() {
+        // Getters
+        public Object getKey() {
             return key;
         }
+        public Object getValue() {
+            return value;
+        }
 
+        // Setters
+        public void setValue(Object value) {
+            this.value = value;
+        }
+
+        // toString() method
         public String toString() {
-            return "Key: " + key + " Count: " + count;
+            return "Key: " + key + " Value: " + value;
         }
 
     }
 
+    // Instaniate variables
     private Entry[] table;
-    public int tableSize;
-    private double loadFactor;
+    private int tableSize;
+    private static final double LOAD_FACTOR = 0.75;
     private int elementCount;
 
+    // Constructs a HashTable with a min size of 1
     public HashTable(int size) {
-        tableSize = size;
-        table = new Entry[size];
-        loadFactor = 0.75;
-        elementCount = 0;
-
-    }
-
-    public void wordCount(String input) {
-
-        String[] splitInput = Split(input);
-
-        for (int i = 0; i < splitInput.length; i++) {
-            search(new Entry(splitInput[i]));
-
-            if (check()) {
-                rehash();
-            }
-
+        if (size <= 0) {
+            size = 1; // has to be at least one to allow rehashing
         }
-
-        System.out.println(toString());
+        this.tableSize = size;
+        this.table = new Entry[size];
+        this.elementCount = 0;
     }
 
-    public void rehash() {
-        HashTable newTable = new HashTable(tableSize * 2);
+    // A rehash function for when the LOAD_FACTOR is exceeded
+    private void rehash() {
+        Entry[] oldTable = this.table;
+        this.tableSize = this.tableSize * 2;
+        this.table = new Entry[tableSize];
+        this.elementCount = 0; // since put() below will recount
 
-        for (int i = 0; i < tableSize; i++) {
-
-            Entry temp = table[i];
-
+        // Dumps all the elements into the new table
+        for (int i = 0; i < oldTable.length; i++) {
+            Entry temp = oldTable[i];
             while (temp != null) {
-                newTable.search(temp);
+                put(temp.getKey(), temp.getValue());
                 temp = temp.next;
             }
         }
-
-        System.out.println(newTable);
-        table = newTable.table;
-        tableSize = newTable.tableSize;
     }
 
-    private String[] Split(String input) {
-        return input.split("\\P{Alpha}+");
-    }
-
-    public void search(Entry word) {
-
-        int h = Math.abs(word.getKey().hashCode()) % tableSize;
-
-        Entry prev = null;
-        Entry temp = table[h];
-
-        // System.out.println(temp);
-
-        if (temp == null) {
-            table[h] = word;
-            elementCount++;
-            System.out.println("Added link list header " + word);
-
-            return;
+    // Gets an entry
+    public Object get(Object key) {
+        int h = calculateHashCode(key);
+        Entry e = getEntry(h, key);
+        if (e != null) {
+            return e.getValue();
         }
+        return null;
+    }
 
-        // System.out.println(temp.next);
+    // Inserts an Entry
+    public Object put(Object key, Object value) {
+        int h = calculateHashCode(key);
+        Entry e = getEntry(h, key);
+        if (e != null) {
+            Object oldValue = e.getValue();
+            e.setValue(value);
+            return oldValue;
+        }
+        // no entry found, add one to head of list
+        Entry toBeAdded = new Entry(key, value);
+        Entry head = table[h];
+        toBeAdded.next = head;
+        table[h] = toBeAdded;
+        elementCount++;
+        // automatically rehashes when necessary
+        if (loadfactorExceeded()) {
+            rehash();
+        }
+        return null;
+    }
 
+    // calculates the hash code of a given Key
+    private int calculateHashCode(Object key) {
+        return Math.abs(key.hashCode()) % tableSize;
+    }
+
+    // Fines a specfic Entry within a linked list
+    private Entry getEntry(int hashCode, Object key) {
+        Entry temp = table[hashCode];
         while (temp != null) {
-
-            if (temp.getKey() == word.getKey()) {
-                System.out.println("Updated Count to " + temp.increase());
-                return;
+            if (temp.getKey().equals(key)) {
+                return temp;
             }
-            prev = temp;
             temp = temp.next;
-
         }
-
-        prev.next = word;
-        System.out.println("Added new Element " + word);
-        System.out.println();
+        return null;
     }
 
-    public boolean check() {
-
-        return ((double) elementCount / tableSize) > loadFactor;
-
+    // method for determining if the load factor has been exceeded
+    private boolean loadfactorExceeded() {
+        return ((double) elementCount / tableSize) > LOAD_FACTOR;
     }
 
+    // toString of the HashTable
     public String toString() {
-
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < tableSize; i++) {
-
             Entry temp = table[i];
             str.append("Elements for " + i + "th row of the Hashtable ");
-
-            if (temp == null) {
-
-            } else {
-
-                while (temp != null) {
-                    str.append(temp + " ");
-                    temp = temp.next;
-                }
+            while (temp != null) {
+                str.append(temp + " ");
+                temp = temp.next;
             }
             str.append("\n");
         }
         return str.toString();
     }
 
+    // Getters
+    public int getElementCount() {
+        return elementCount;
+    }
+
+    public Iterator getIterator() {
+        return new Iterator(this);
+    }
+
+    // Iterator for iterating through the table
+    public class Iterator {
+
+        private HashTable table;
+        private int index;
+        private Entry entry;
+
+        private Iterator(HashTable table) {
+            this.table = table;
+            this.index = 0;
+            setNextEntry();
+        }
+
+        private void setNextEntry() {
+            entry = table.table[index];
+        }
+
+        public Entry getNext() {
+            while (true) {
+                if (entry != null) {
+                    Entry temp = entry;
+                    entry = entry.next;
+                    return temp;
+                }
+                index++;
+                if (index == table.tableSize) {
+                    return null;
+                }
+                setNextEntry();
+            }
+        }
+    }
 }
