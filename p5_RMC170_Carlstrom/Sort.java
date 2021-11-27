@@ -12,9 +12,9 @@ public class Sort {
         // insertionSort(generateRandom());
         // upgradedQuickSort(generateRandom(),2,3);
 
-        int k = 9;
+        int k = 0;
         int[] input = generateRandom();
-        System.out.println("The " + k + "th Smallest element is: " + select(input, k));
+        System.out.println("The " + k + "th Largest element is: " + select(input, k));
         mergeSort(input);
     }
 
@@ -171,10 +171,22 @@ public class Sort {
     public static int select(int[] input, int k) {
 
         System.out.println(toString(input));
+        //Switches from smallest to largest
+        k = input.length-k;
         return kthLargestRecursion(input, k, input.length-1, 0);
     }
 
     public static int kthLargestRecursion(int[] input, int k, int r, int l) {
+
+
+        // Makes sure k is reasonable
+        if(k <= -1){
+            k=1;
+        }
+        if(k>=input.length){
+            k=input.length;
+        }
+
 
         if (k > 0 && k <= (r - l + 1)) {
             int pos = randomPartition(input, l, r);
@@ -189,10 +201,12 @@ public class Sort {
             return kthLargestRecursion(input, k - pos + l - 1, r, pos + 1);
         }
 
+        // Error Statement
         return Integer.MAX_VALUE;
 
     }
 
+    // Creates a random partition
     public static int randomPartition(int[] input, int l, int r) {
 
         int n = r - l + 1;
@@ -204,8 +218,9 @@ public class Sort {
     public static int[] generateRandom() {
         System.out.println("Generating arrays");
         int[] random = new int[
-        // (int) (Math.random() * 100)
-        10];
+        //(int) (Math.random() * 100)
+        10
+        ];
         for (int i = 0; i < random.length; i++) {
             random[i] = i;
         }
@@ -230,19 +245,21 @@ public class Sort {
 
     public static boolean isSorted(int[] input) {
         for (int i = 0; i < input.length - 1; i++) {
-            if (input[i] > input[i + 1]) {
+            if (input[i] < input[i + 1]) {
                 return false;
             }
         }
         return true;
     }
 
+    /*
     public static boolean isSorted(int[] input, int count) {
         for (int i = 0; i < count; i++) {
-            if (input[i] > input[i + 1]) {
+            if (input[i] < input[i + 1]) {
                 return false;
             }
         }
         return true;
     }
+    */
 }
