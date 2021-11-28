@@ -178,7 +178,7 @@ public class Sort {
         return kthLargestRecursion(input, k, input.length-1, 0);
     }
 
-    public static int kthLargestRecursion(int[] input, int k, int r, int l) {
+    private static int kthLargestRecursion(int[] input, int k, int r, int l) {
 
 
         // Makes sure k is reasonable
@@ -204,7 +204,8 @@ public class Sort {
         }
 
         // Error Statement
-        return Integer.MAX_VALUE;
+        // K should never get here
+        throw new Error();
 
     }
 
@@ -217,12 +218,12 @@ public class Sort {
         return partition(input, l, r);
     }
 
+    // Generates a random array for stronger testing
+    // No duplicates
     public static int[] generateRandom() {
         System.out.println("Generating arrays");
         int[] random = new int[
-        //(int) (Math.random() * 100)
-        10
-        ];
+        (int) (Math.random() * 100)];
         for (int i = 0; i < random.length; i++) {
             random[i] = i;
         }
@@ -235,6 +236,7 @@ public class Sort {
         return random;
     }
 
+    // Converts an array to a string
     public static String toString(int[] input) {
 
         StringBuilder str = new StringBuilder();
@@ -245,6 +247,7 @@ public class Sort {
         return str.toString();
     }
 
+    // Determines wether the array is sorted in descended order.
     public static boolean isSorted(int[] input) {
         for (int i = 0; i < input.length - 1; i++) {
             if (input[i] < input[i + 1]) {
@@ -253,15 +256,4 @@ public class Sort {
         }
         return true;
     }
-
-    /*
-    public static boolean isSorted(int[] input, int count) {
-        for (int i = 0; i < count; i++) {
-            if (input[i] < input[i + 1]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    */
 }
