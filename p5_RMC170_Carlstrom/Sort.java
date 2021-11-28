@@ -7,9 +7,9 @@ public class Sort {
     public static void test() {
         System.out.println("Started testing");
 
-        // mergeSort(generateRandom());
+        mergeSort(generateRandom());
         // quickSort(generateRandom());
-        insertionSort(generateRandom());
+        //insertionSort(generateRandom());
         // upgradedQuickSort(generateRandom(),2,3);
 
         /*
@@ -107,7 +107,7 @@ public class Sort {
         int i = l - 1;
 
         for (int j = l; j <= h; j++) {
-            if (input[j] < pivot) {
+            if (input[j] > pivot) {
                 i++;
                 swap(input, i, j);
             }
@@ -116,6 +116,7 @@ public class Sort {
         return (i + 1);
     }
 
+    // Swaps to elements in an array
     public static void swap(int[] input, int i, int j) {
         int temp = input[i];
         input[i] = input[j];
