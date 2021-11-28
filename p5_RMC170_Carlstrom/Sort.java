@@ -9,13 +9,15 @@ public class Sort {
 
         // mergeSort(generateRandom());
         // quickSort(generateRandom());
-        // insertionSort(generateRandom());
+        insertionSort(generateRandom());
         // upgradedQuickSort(generateRandom(),2,3);
 
+        /*
         int k = 0;
         int[] input = generateRandom();
         System.out.println("The " + k + "th Largest element is: " + select(input, k));
         mergeSort(input);
+        */
     }
 
     public static void mergeSort(int[] input) {
@@ -124,18 +126,18 @@ public class Sort {
 
         System.out.println(toString(input));
 
-        for (int i = 1; i < input.length; i++) {
+        for (int i = 1 ; i < input.length; i++) {
 
             int currVal = input[i];
 
-            int j = i - 1;
-            while (j >= 0 && currVal < input[j]) {
-                input[j + 1] = input[j];
+            int j = i;
+            while (j > 0 &&  input[j-1] < currVal ) {
+                input[j] = input[j-1];
                 j--;
 
             }
 
-            input[j + 1] = currVal;
+            input[j] = currVal;
         }
 
         System.out.println("Break");
