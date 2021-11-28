@@ -7,10 +7,10 @@ public class Sort {
     public static void test() {
         System.out.println("Started testing");
 
-        mergeSort(generateRandom());
+        //mergeSort(generateRandom());
         // quickSort(generateRandom());
         //insertionSort(generateRandom());
-        // upgradedQuickSort(generateRandom(),2,3);
+        upgradedQuickSort(generateRandom(),2,3);
 
         /*
         int k = 0;
@@ -60,7 +60,7 @@ public class Sort {
         int k = l;
 
         while (i < l1 && j < l2) {
-            if (L[i] <= R[j]) {
+            if (L[i] >= R[j]) {
                 input[k] = L[i];
                 i++;
             } else {
