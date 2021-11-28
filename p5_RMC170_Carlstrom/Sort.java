@@ -7,17 +7,16 @@ public class Sort {
     public static void test() {
         System.out.println("Started testing");
 
-        //mergeSort(generateRandom());
-        // quickSort(generateRandom());
-        //insertionSort(generateRandom());
+        mergeSort(generateRandom());
+        quickSort(generateRandom());
+        insertionSort(generateRandom());
         upgradedQuickSort(generateRandom(),2,3);
 
-        /*
         int k = 0;
         int[] input = generateRandom();
         System.out.println("The " + k + "th Largest element is: " + select(input, k));
         mergeSort(input);
-        */
+        
     }
 
     public static void mergeSort(int[] input) {
