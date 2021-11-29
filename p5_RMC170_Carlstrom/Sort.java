@@ -5,6 +5,9 @@ public class Sort {
         test();
     }
 
+    // Tests all methods on all variants
+    // NOTE: I tried to be able to remove all the duplicate function calls
+    // within each sorting call. I tried for like an hour.
     public static void test() {
         System.out.println("Started testing");
 
@@ -42,6 +45,7 @@ public class Sort {
         mergeSort(input);
         
     }
+    
 
     
     // Starts mergeSort
