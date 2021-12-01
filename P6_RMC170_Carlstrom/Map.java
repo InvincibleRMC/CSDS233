@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Map {
 
@@ -179,6 +180,19 @@ public class Map {
     
 
     public final boolean addRoads(String fromBuilding, Collection<String> toBuildings, int length) {
+
+        Iterator<String> check = toBuildings.iterator();
+
+        while(check.hasNext()){
+            if(roadExists(fromBuilding, (String) check.next())){
+                return false;
+            }
+        }
+        Iterator<String> buildings = toBuildings.iterator();
+        while(buildings.hasNext()){
+            addRoad(fromBuilding, (String) buildings.next(), length);
+        }
+        return true;
 
     }
 
