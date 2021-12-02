@@ -165,6 +165,14 @@ public class Map {
         if (roadExists(fromBuilding, toBuilding)) {
             return false;
         }
+        
+        return (addRoadHelper(fromBuilding, toBuilding, length) && addRoadHelper(toBuilding, fromBuilding, length));
+    }
+
+
+    public final boolean addRoadHelper(String fromBuilding, String toBuilding, int length) {
+
+        
 
         int hFB = calculateHashCode(fromBuilding);
         int hTB = calculateHashCode(toBuilding);
