@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -31,6 +34,19 @@ public class Map {
         map[calculateHashCode(name)] = new Node(name);
 
         buildingCount = 1;
+    }
+
+    public static void main(String[] args) {
+        Map m = new Map("Hi", 10, 0.75);
+        m.addBuilding("Hello");
+        m.addRoad("Hi", "Hello", 5);
+
+        try {
+            m.graphToTXT();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
     }
 
     // calculates the hash code of a given Key
@@ -73,16 +89,16 @@ public class Map {
         }
     }
 
-    public final boolean addBuilding(String name){
+    public final boolean addBuilding(String name) {
 
         int h = calculateHashCode(name);
-        Node n = getBuilding(h,name);
+        Node n = getBuilding(h, name);
 
-        if(buildingExists(h, name)){
+        if (buildingExists(h, name)) {
             throw new IllegalArgumentException();
         }
-        
-        if(n!=null){
+
+        if (n != null) {
             map[h].findEnd().setEdge(n);
             return true;
         }
@@ -93,7 +109,7 @@ public class Map {
         map[h] = toBeAdded;
         buildingCount++;
 
-        if(loadfactorExceeded()){
+        if (loadfactorExceeded()) {
             rehash();
         }
         return true;
@@ -112,111 +128,157 @@ public class Map {
         return null;
     }
 
-
     // might be redundant with getbuilding
-    public boolean buildingExists(int h, String name){
+    public boolean buildingExists(int h, String name) {
 
         Node temp = map[h];
-        while(temp !=null){
-            
-            if(temp.getName().equals(name)){
+        while (temp != null) {
+
+            if (temp.getName().equals(name)) {
                 return true;
             }
-            
+
             temp = temp.findNextBuilding();
-            
+
         }
         return false;
 
     }
 
     // might be redundant with getbuilding
-    public boolean roadExists(String fromBuilding,String toBuilding){
+    public boolean roadExists(String fromBuilding, String toBuilding) {
 
         int h = calculateHashCode(fromBuilding);
 
-       Node temp = getBuilding(h, fromBuilding);
-        while(!temp.isEnd()){
-            if(temp.getName().equals(toBuilding)){
+        Node temp = getBuilding(h, fromBuilding);
+        while (!temp.isEnd()) {
+            if (temp.getName().equals(toBuilding)) {
                 return true;
             }
         }
         return false;
-        
+
     }
-    
 
     public final boolean addRoad(String fromBuilding, String toBuilding, int length) {
 
-        if(roadExists(fromBuilding,toBuilding)){
+        if (roadExists(fromBuilding, toBuilding)) {
             return false;
         }
 
         int hFB = calculateHashCode(fromBuilding);
         int hTB = calculateHashCode(toBuilding);
 
-        if(!buildingExists(hFB, fromBuilding)){
+        if (!buildingExists(hFB, fromBuilding)) {
             addBuilding(fromBuilding);
         }
-        if(!buildingExists(hTB, toBuilding)){
+        if (!buildingExists(hTB, toBuilding)) {
             addBuilding(toBuilding);
         }
 
         Node n = getBuilding(hFB, fromBuilding);
-        n.setEdge(new Node(toBuilding,length));
-
+        n.setEdge(new Node(toBuilding, length));
 
         Node temp = getBuilding(hFB, fromBuilding);
-        while(!temp.isEnd()){
+        while (!temp.isEnd()) {
             temp = temp.getEdge();
         }
-        Node toBuildingNode = new Node(toBuilding,length);
+        Node toBuildingNode = new Node(toBuilding, length);
         temp.setEnd(false);
         temp.setEdge(toBuildingNode);
         return true;
 
     }
 
-    
-
     public final boolean addRoads(String fromBuilding, Collection<String> toBuildings, int length) {
 
         Iterator<String> check = toBuildings.iterator();
 
-        while(check.hasNext()){
-            if(roadExists(fromBuilding, (String) check.next())){
+        while (check.hasNext()) {
+            if (roadExists(fromBuilding, (String) check.next())) {
                 return false;
             }
         }
         Iterator<String> buildings = toBuildings.iterator();
-        while(buildings.hasNext()){
+        while (buildings.hasNext()) {
             addRoad(fromBuilding, (String) buildings.next(), length);
         }
         return true;
 
     }
 
-    public final boolean removeBuilding(String name) {
+    /*
+     * 
+     * public final boolean removeBuilding(String name) {
+     * 
+     * }
+     * 
+     * public final boolean removeRoad(String fromBuilding, String toBuilding) {
+     * 
+     * }
+     * 
+     * public final int shortestPath(String source, String destination) {
+     * 
+     * }
+     * 
+     * public final List<String> shortestPath(String soucre, String destination) {
+     * 
+     * }
+     * 
+     * public final int minimumTotalLength() {
+     * 
+     * }
+     * 
+     * public final int secondShortestPath(String source, String destination) {
+     * 
+     * }
+     * 
+     */
 
-    }
+    public void graphToTXT() throws IOException {
 
-    public final boolean removeRoad(String fromBuilding, String toBuilding) {
+        try {
+            
+            FileWriter f = new FileWriter("P6_RMC170_Carlstrom/graph.dot");
 
-    }
+            f.write("");
 
-    public final int shortestPath(String source, String destination) {
+            StringBuilder str = new StringBuilder();
 
-    }
+            str.append("// dot file of graph");
+            str.append("\n");
+            str.append("graph graphname {");
+            str.append("\n");
 
-    public final List<String> shortestPath(String soucre, String destination) {
+            for (int i = 0; i < mapSize; i++) {
 
-    }
+                //System.out.println(map[i]);
 
-    public final int minimumTotalLength() {
+                if (map[i] != null) {
+                    Node temp = map[i];
 
-    }
+                    while (temp != null) {
 
-    public final int secondShortestPath(String source, String destination) {
+                        str.append(temp.getName() + " -- ");
+
+                        if (temp.isEnd()) {
+                            str.append("\n");
+                        }
+
+                        temp = temp.getEdge();
+                    }
+
+                    str.append("\n");
+                }
+            }
+
+            str.append("\n}");
+            System.out.println(str.toString());
+            f.write(str.toString());
+            f.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -68,5 +68,8 @@ public class Node{
         return temp;
     }
     
+    public String toString(){
+        return "Name: " + name + " length: " + length;
+    }
 
 }
