@@ -37,16 +37,13 @@ public class Map {
     }
 
     public static void main(String[] args) {
-        Map m = new Map("Hi", 10, 0.75);
-        m.addBuilding("Hello");
-        m.addRoad("Hi", "Hello", 5);
+        // Map m = new Map("The", 10, 0.75);
+        // m.addBuilding("Hello");
+        // m.addRoad("Hi", "Hello", 5);
 
-        try {
-            m.graphToTXT();
-        } catch (IOException e) {
+        Map m = generateRandomGraph(10, 0.8);
+        m.toString();
 
-            e.printStackTrace();
-        }
     }
 
     // calculates the hash code of a given Key
@@ -61,27 +58,44 @@ public class Map {
 
     // A rehash function for when the LOAD_FACTOR is exceeded
     private void rehash() {
+
+        System.out.println("Starting Rehash weary");
         Node[] oldTable = this.map;
         this.mapSize = this.mapSize * 2;
         this.map = new Node[mapSize];
-        this.buildingCount = 0; // since put() below will recount
+        this.buildingCount = 0;
 
         // Dumps all the elements into the new table
         for (int i = 0; i < oldTable.length; i++) {
             Node temp = oldTable[i];
-            String name = temp.getName();
-            temp = temp.getEdge();
+            String name = "";
+            // temp = temp.getEdge();
+
+            String str="";
+                while(temp !=null){
+                    str= str+ temp;
+                    temp =temp.getEdge();
+                }
+                System.out.print(str);
+
+                temp=oldTable[i];
             while (temp != null) {
 
+                
+
+               // System.out.println(toString());
+                System.out.println("Loop inside rehash() " + temp );
+
                 if (temp.getLength() == 0) {
+                    name = temp.getName();
+                    // System.out.println(name);
                     addBuilding(name);
+                } else {
+                    addRoad(name, temp.getName(), temp.getLength());
                 }
-
-                addRoad(name, temp.getName(), temp.getLength());
-
-                if (temp.isEnd()) {
-                    name = temp.getEdge().getName();
-                }
+                // if (temp.isEnd()) {
+                // name = temp.getEdge().getName();
+                // }
 
                 temp = temp.getEdge();
 
@@ -94,7 +108,8 @@ public class Map {
         int h = calculateHashCode(name);
         Node n = getBuilding(h, name);
 
-        if (buildingExists(h, name)) {
+        if (buildingExists(name)) {
+            System.out.println("Building already exists" + " cry now " + name);
             throw new IllegalArgumentException();
         }
 
@@ -105,7 +120,7 @@ public class Map {
 
         Node toBeAdded = new Node(name);
         Node head = map[h];
-        (toBeAdded.getEdge()).setEdge(head);
+        toBeAdded.setEdge(head);
         map[h] = toBeAdded;
         buildingCount++;
 
@@ -120,19 +135,25 @@ public class Map {
     private Node getBuilding(int hashCode, String name) {
         Node temp = map[hashCode];
         while (temp != null) {
-            if (temp.getName().equals(name)) {
+            if (temp.getName().equals(name) && temp.getLength() == 0) {
                 return temp;
             }
-            temp = temp.findNextBuilding();
+            temp = temp.getEdge();
         }
         return null;
     }
 
     // might be redundant with getbuilding
-    public boolean buildingExists(int h, String name) {
+    public boolean buildingExists(String name) {
+
+        int h = calculateHashCode(name);
+
+        System.out.println("Building Exists check? " + name);
 
         Node temp = map[h];
         while (temp != null) {
+
+            System.out.println("Inside buildingExists check loop" + temp);
 
             if (temp.getName().equals(name)) {
                 return true;
@@ -150,11 +171,18 @@ public class Map {
 
         int h = calculateHashCode(fromBuilding);
 
-        Node temp = getBuilding(h, fromBuilding);
-        while (!temp.isEnd()) {
+        Node temp = map[h];
+        String currName= map[h].getName();
+
+
+        while (temp != null) {
+
+            //if(temp.)
+
             if (temp.getName().equals(toBuilding)) {
                 return true;
             }
+            temp = temp.findNextBuilding();
         }
         return false;
 
@@ -162,37 +190,62 @@ public class Map {
 
     public final boolean addRoad(String fromBuilding, String toBuilding, int length) {
 
+        System.out.println("Adding Road:" + fromBuilding + " " + toBuilding);
+
         if (roadExists(fromBuilding, toBuilding)) {
+            System.out.println(" Road exists? " + fromBuilding + " " + toBuilding + " "
+                    + roadExists(fromBuilding, toBuilding));
             return false;
         }
-        
-        return (addRoadHelper(fromBuilding, toBuilding, length) && addRoadHelper(toBuilding, fromBuilding, length));
-    }
 
+        boolean step1 = addRoadHelper(fromBuilding, toBuilding, length);
+        boolean step2 = addRoadHelper(toBuilding, fromBuilding, length);
+
+        return step1 && step2;
+    }
 
     public final boolean addRoadHelper(String fromBuilding, String toBuilding, int length) {
 
-        
-
+        System.out.println("Add road helper");
         int hFB = calculateHashCode(fromBuilding);
-        int hTB = calculateHashCode(toBuilding);
 
-        if (!buildingExists(hFB, fromBuilding)) {
+        System.out.println("Here10?");
+        System.out.println(buildingExists(fromBuilding));
+
+        if (!buildingExists(fromBuilding)) {
             addBuilding(fromBuilding);
         }
-        if (!buildingExists(hTB, toBuilding)) {
+
+        int hTB = calculateHashCode(toBuilding);
+        System.out.println("does the to building exist?: " + buildingExists(toBuilding));
+        if (!buildingExists(toBuilding)) {
+            System.out.println("Add building inside building check " + toBuilding);
             addBuilding(toBuilding);
         }
 
+        hFB = calculateHashCode(fromBuilding);
+        hTB = calculateHashCode(toBuilding);
+
+        System.out.println("made it pass building checks");
+
+        System.out.println("here?" + fromBuilding + " " + toBuilding);
+
         Node n = getBuilding(hFB, fromBuilding);
+        System.out.println(n);
         n.setEdge(new Node(toBuilding, length));
 
+        System.out.println("Here25?");
+
         Node temp = getBuilding(hFB, fromBuilding);
+        System.out.println("Here27?");
         while (!temp.isEnd()) {
+            System.out.print(temp.isEnd());
             temp = temp.getEdge();
         }
+        System.out.println("Here30?");
         Node toBuildingNode = new Node(toBuilding, length);
         temp.setEnd(false);
+        System.out.println("Here40?");
         temp.setEdge(toBuildingNode);
         return true;
 
@@ -243,10 +296,69 @@ public class Map {
      * 
      */
 
+    public static Map generateRandomGraph(int size, double loadFactor) {
+        String[] common = { "the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he",
+                "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this", "have",
+                "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we",
+                "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do",
+                "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them",
+                "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has",
+                "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "people",
+                "my", "than", "first", "water", "been", "call", "who", "oil", "its", "now", "find",
+                "long", "down", "day", "did", "get", "come", "made", "may", "part"
+        };
+
+        if (size > common.length) {
+            size = common.length;
+        }
+
+        Map m = new Map(common[0], size, loadFactor);
+
+        for (int i = 1; i < size; i++) {
+            m.addBuilding(common[i]);
+        }
+
+        try {
+            m.graphToTXT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(m);
+
+        for (int i = 0; i < size; i++) {
+
+            while (Math.random() < 0.9) {
+                String fromBuilding = common[i];
+                String toBuilding = common[(int) (Math.random() * (common.length - size) + size)];
+                System.out.println("Building names equal? " + fromBuilding + " " + toBuilding);
+
+                if (!fromBuilding.equals(toBuilding)) {
+                    m.addRoad(fromBuilding, toBuilding, (int) (Math.random() * 256));
+                    try {
+                        m.graphToTXT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(m);
+                }
+            }
+        }
+
+        try {
+            m.graphToTXT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(m);
+        return m;
+    }
+
     public void graphToTXT() throws IOException {
 
         try {
-            
+
             FileWriter f = new FileWriter("P6_RMC170_Carlstrom/graph.dot");
 
             f.write("");
@@ -260,24 +372,26 @@ public class Map {
 
             for (int i = 0; i < mapSize; i++) {
 
-                //System.out.println(map[i]);
+                System.out.println(map[i]);
 
-                if (map[i] != null) {
-                    Node temp = map[i];
+                Node temp = map[i];
 
-                    while (temp != null) {
+                while (temp != null) {
 
-                        str.append(temp.getName() + " -- ");
+                    str.append(temp.getName());
 
-                        if (temp.isEnd()) {
-                            str.append("\n");
-                        }
-
-                        temp = temp.getEdge();
+                    if (!temp.isEnd()) {
+                        str.append(" -- ");
+                    } else {
+                        str.append("[label=\"length is: " + temp.getLength() + "\"]");
+                        str.append("\n");
                     }
 
-                    str.append("\n");
+                    temp = temp.getEdge();
                 }
+
+                // str.append("\n");
+
             }
 
             str.append("\n}");
@@ -287,6 +401,34 @@ public class Map {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public String toString() {
+
+        StringBuilder str = new StringBuilder();
+
+        for (int i = 0; i < mapSize; i++) {
+
+            str.append("Line # " + i + " "); 
+            Node temp = map[i];
+
+            while (temp != null) {
+                if(temp.getLength()==0){
+                    str.append("Building: ");
+                }
+                else{
+                    str.append("Road: ");
+                }
+                str.append(temp);
+                temp = temp.getEdge();
+            }
+
+            str.append("\n");
+
+        }
+
+        return str.toString();
 
     }
 

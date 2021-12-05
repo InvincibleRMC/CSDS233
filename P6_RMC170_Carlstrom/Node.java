@@ -49,10 +49,24 @@ public class Node{
     // Finds the next Node when a collision occurs
     public Node findNextBuilding(){
 
-        Node temp= getEdge();
+        Node temp = edge;
 
-        while(!isEnd()){
-            temp =temp.getEdge();
+        System.out.println(temp);
+        if (temp == null){
+            return null;
+        }
+
+        temp=temp.getEdge();
+
+        if (temp == null){
+            return null;
+        }
+
+        while(temp.getLength()!=0){
+            temp = temp.getEdge();
+            if (temp == null){
+                return null;
+            }
         }
 
         return temp;
@@ -69,7 +83,8 @@ public class Node{
     }
     
     public String toString(){
-        return "Name: " + name + " length: " + length;
+        return //"Node toString " + 
+        "Name: " + name + " length: " + length;
     }
 
 }
