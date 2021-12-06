@@ -249,33 +249,22 @@ public class Map {
 
     public final boolean addRoadHelper(String fromBuilding, String toBuilding, int length) {
 
-        // System.out.println("Add road helper");
         int hFB = calculateHashCode(fromBuilding);
 
-        // System.out.println("Here10?");
-        // System.out.println(buildingExists(fromBuilding));
-
+        
         if (!buildingExists(fromBuilding)) {
             addBuilding(fromBuilding);
         }
 
-        int hTB = calculateHashCode(toBuilding);
-        // System.out.println("does the to building exist?: " +
-        // buildingExists(toBuilding));
+        
         if (!buildingExists(toBuilding)) {
             // System.out.println("Add building inside building check " + toBuilding);
             addBuilding(toBuilding);
         }
 
         hFB = calculateHashCode(fromBuilding);
-        hTB = calculateHashCode(toBuilding);
-
-        // System.out.println("made it pass building checks");
-
-        // System.out.println("here?" + fromBuilding + " " + toBuilding);
-
+        
         // Add Roads
-
         Node road = new Node(toBuilding, length);
 
         Node temp = map[hFB];
