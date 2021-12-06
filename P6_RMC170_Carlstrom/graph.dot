@@ -1,15 +1,12 @@
 // dot file of graph
 graph graphname {
-them -- the[label="length is: 210"]
-the -- use -- use[label="length is: 176"]
-use -- the[label="length is: 176"]
-more -- the[label="length is: 66"]
-and[label="length is: 0"]
-to[label="length is: 0"]
-is[label="length is: 0"]
-it[label="length is: 0"]
-some -- the[label="length is: 136"]
-an -- a[label="length is: 183"]
-you[label="length is: 0"]
+the -- he [label="length is: 240"]
+of -- it [label="length is: 233"]
+he -- the [label="length is: 240"]
+and -- that [label="length is: 3"]
+is -- to [label="length is: 107"]
+it -- of [label="length is: 233"]
+a -- you [label="length is: 178"]
+you -- a [label="length is: 178"]
 
 }
