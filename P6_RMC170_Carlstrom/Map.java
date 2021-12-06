@@ -1,8 +1,12 @@
+import static java.lang.Thread.sleep;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
 public class Map {
 
@@ -12,6 +16,10 @@ public class Map {
     private int mapSize;
     private double loadFactor;
     private int buildingCount;
+
+
+
+    //TODO rehash broken and implement other 4 functiosns
 
     public Map(String name, int size, double loadFactor) {
 
@@ -42,10 +50,27 @@ public class Map {
         // m.addRoad("Hi", "Hello", 5);
 
         Map cry = generateGraph();
-        cry.toString();
+        
 
-        // Map m = generateRandomGraph(10, 0.8);
-        // m.toString();
+        Map m = generateRandomGraph(10, 0.8);
+        
+        try {
+            cry.graphToTXT();
+            Thread.sleep(500);
+            cry.removeBuilding("the");
+            cry.graphToTXT();
+
+
+            m.graphToTXT();
+            Thread.sleep(5000);
+            m.removeBuilding("the");
+            m.graphToTXT();
+
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
@@ -127,7 +152,7 @@ public class Map {
         buildingCount++;
 
         if (loadfactorExceeded()) {
-            rehash();
+         //   rehash();
         }
         return true;
 
@@ -182,16 +207,23 @@ public class Map {
         int h = calculateHashCode(fromBuilding);
 
         Node temp = map[h];
-        String currName = map[h].getName();
+        // String currName = map[h].getName();
 
-        while (temp != null) {
+        String buildingName = temp.getName();
+        while (temp != null) { 
+
+            //System.out.println(temp);
+
+            if(temp.getLength()==0){
+                buildingName=temp.getName();
+            }
 
             // if(temp.)
 
-            if (temp.getName().equals(toBuilding)) {
+            if (temp.getName().equals(toBuilding) && buildingName.equals(fromBuilding)) {
                 return true;
             }
-            temp = temp.findNextBuilding();
+            temp = temp.getEdge();
         }
         return false;
 
@@ -243,15 +275,15 @@ public class Map {
 
         // Add Roads
 
-        Node road = new Node(toBuilding, length);  
+        Node road = new Node(toBuilding, length);
 
         Node temp = map[hFB];
-        Node start=temp;
+        Node start = temp;
 
-        //find start
-        while(temp != null){
+        // find start
+        while (temp != null) {
 
-            if(temp.getName().equals(fromBuilding) && temp.getLength()==0){
+            if (temp.getName().equals(fromBuilding) && temp.getLength() == 0) {
                 start = temp;
             }
 
@@ -259,10 +291,10 @@ public class Map {
         }
 
         Node end = start.getEdge();
-       // Node temp2 = start;
+        // Node temp2 = start;
 
-        //find end
-        while(end!= null&& end.getLength() !=0){
+        // find end
+        while (end != null && end.getLength() != 0) {
 
             end = end.getEdge();
 
@@ -271,25 +303,25 @@ public class Map {
         road.setEdge(end);
 
         start.setEdge(road);
-/*
-        Node n = getBuilding(fromBuilding);
-        System.out.println(n);
-        n.setEdge(new Node(toBuilding, length));
-
-        System.out.println("Here25?");
-
-        Node temp = getBuilding(fromBuilding);
-        System.out.println("Here27?");
-        while (temp.getLength() != 0) {
-            System.out.print(temp.isEnd());
-            temp = temp.getEdge();
-        }
-        System.out.println("Here30?");
-        Node toBuildingNode = new Node(toBuilding, length);
-        temp.setEnd(false);
-        System.out.println("Here40?");
-        temp.setEdge(toBuildingNode);
-        */
+        /*
+         * Node n = getBuilding(fromBuilding);
+         * System.out.println(n);
+         * n.setEdge(new Node(toBuilding, length));
+         * 
+         * System.out.println("Here25?");
+         * 
+         * Node temp = getBuilding(fromBuilding);
+         * System.out.println("Here27?");
+         * while (temp.getLength() != 0) {
+         * System.out.print(temp.isEnd());
+         * temp = temp.getEdge();
+         * }
+         * System.out.println("Here30?");
+         * Node toBuildingNode = new Node(toBuilding, length);
+         * temp.setEnd(false);
+         * System.out.println("Here40?");
+         * temp.setEdge(toBuildingNode);
+         */
         return true;
 
     }
@@ -311,16 +343,191 @@ public class Map {
 
     }
 
+    public final boolean removeBuilding(String name) {
+
+        System.out.println(toString());
+        System.out.println("Removing " + name);
+
+        if (!buildingExists(name)) {
+            return false;
+        }
+
+        System.out.println("Removing " + name + " past building exist check");
+
+        int h = calculateHashCode(name);
+
+        Node temp = map[h];
+
+        // If building is as front of linked list
+        int counter = -1;
+
+        // find start
+        Node start = temp;
+        while ((start.getEdge() != null)
+                && !(start.getEdge().getLength() == 0 && start.getEdge().getName().equals(name))) {
+
+            if (start.getLength() == 0) {
+                counter++;
+            }
+
+            start = start.getEdge();
+        }
+
+        System.out.println(start);
+        // find end
+
+        Node end = start.getEdge();
+
+        System.out.println(end);
+
+        int anotherCounter = 0;
+
+        Boolean firstOne=false;
+
+
+        Node road = null;
+
+        while (end != null && anotherCounter <= 1) {
+
+            if (end.getLength() == 0) {
+                anotherCounter++;
+            } 
+            else if(firstOne){
+                road.setEdge(end);
+            }
+            else {
+                firstOne=true;
+                road = end;
+            }
+            end = end.getEdge();
+        }
+
+        // System.out.println(x);
+
+        if (counter == 1) {
+            map[h] = end;
+        } else
+            start.setEdge(end);
+
+        if (map[h] == null) {
+            buildingCount--;
+        }
+
+        System.out.println("After removed building");
+        System.out.println(toString());
+
+        Node roadToString=road;
+
+        String str="toString of road removal list ";
+        while(roadToString!=null){
+            str= str + roadToString;
+            roadToString = roadToString.getEdge();
+        }
+
+        System.out.println(str);
+        // Removes the roads
+
+        //System.out
+        while (road != null) {
+            removeRoad(road.getName(), name);
+            road = road.getEdge();
+        }
+        System.out.println("Finished removing roads");
+
+        /*
+         * 
+         * for(int i=0;i<map.length;i++){
+         * Node prev = map[i];
+         * Node road = prev.getEdge();
+         * while(road !=null){
+         * 
+         * if(road.getName().equals(name)){
+         * prev.setEdge(road.getEdge());
+         * }
+         * road = prev;
+         * prev = prev.getEdge();
+         * }
+         * }
+         * 
+         * System.out.println("After removing roads");
+         * System.out.println(toString());
+         */
+        return true;
+    }
     /*
+     * public final boolean removeAllRoads(String toBuilding){
+     * for(int i =0;i<map.length;i++){
      * 
-     * public final boolean removeBuilding(String name) {
+     * Node temp = map[i];
+     * Node prev =null;
+     * 
+     * if(temp!=null && temp.getName().equals(toBuilding)){
      * 
      * }
      * 
-     * public final boolean removeRoad(String fromBuilding, String toBuilding) {
+     * while(temp != null){
      * 
+     * if(temp.getEdge().getName().equals(toBuilding)){
+     * temp.setEdge(temp.getEdge().getEdge());
      * }
      * 
+     * 
+     * }
+     * }
+     * return false;
+     * }
+     */
+
+    public final boolean removeRoad(String fromBuilding, String toBuilding) {
+
+
+        System.out.println("Starting to remove Road");
+        if (!roadExists(fromBuilding, toBuilding)) {
+            
+            System.out.println("Can't remove " + toBuilding + "because code does not think it exists");
+            return false;
+        }
+
+       // System.out
+
+        int h = calculateHashCode(fromBuilding);
+
+        Node building = map[h];
+        // String name;
+        // temp.getName();
+
+        // Finds frombuilding
+        /*
+        while (building != null && !building.getName().equals(fromBuilding)) {
+            building = building.getEdge();
+        }
+
+        System.out.println("remove Road start " +building);
+
+        Node road = building.getEdge();
+
+        // removes road
+        while (road != null && road.getLength() != 0) {
+
+
+        }
+        */
+
+        while(building!=null){
+
+        if(building.getEdge().getName().equals(toBuilding)){
+            building.setEdge(building.getEdge().getEdge());
+            return true;
+        }
+
+        building=building.getEdge();
+        }
+
+
+        // If it gets here this is a bad time
+        return true;
+    }
+    /*
      * public final int shortestPath(String source, String destination) {
      * 
      * }
@@ -351,7 +558,7 @@ public class Map {
                 "long", "down", "day", "did", "get", "come", "made", "may", "part"
         };
 
-        int size = 10;
+        int size = 20;
         double loadFactor = 0.9;
 
         if (size > common.length) {
@@ -491,14 +698,13 @@ public class Map {
                         // str.append(name);
                         str.append(name);
 
-                        if(temp.getEdge() == null){
+                        if (temp.getEdge() == null) {
                             str.append("\n");
-                        }
-                        else if(temp.getEdge().getLength()==0){
+                        } else if (temp.getEdge().getLength() == 0) {
                             str.append("\n");
                         }
                     } else {
-                        str.append(" -- "+ temp.getName() + " [label=\"length is: " + temp.getLength() + "\"]");
+                        str.append(" -- " + temp.getName() + " [label=\"length is: " + temp.getLength() + "\"]");
                         str.append("\n");
                     }
 
