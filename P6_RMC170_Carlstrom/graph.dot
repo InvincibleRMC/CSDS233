@@ -1,14 +1,15 @@
 // dot file of graph
 graph graphname {
-the -- he [label="length is: 70"]
-of -- it [label="length is: 211"]
-that -- and [label="length is: 209"]
-he -- the [label="length is: 70"]
-in -- and -- that [label="length is: 209"]
-to -- is [label="length is: 88"]
-is -- to [label="length is: 88"]
-it -- of [label="length is: 211"]
-a -- you [label="length is: 98"]
-you -- a [label="length is: 98"]
+the -- he [label="length is: 5"]
+of -- it [label="length is: 172"]
+that -- and [label="length is: 17"]
+he -- the [label="length is: 5"]
+in
+and -- that [label="length is: 17"]
+to -- is [label="length is: 250"]
+is -- to [label="length is: 250"]
+it -- of [label="length is: 172"]
+a -- you [label="length is: 227"]
+you -- a [label="length is: 227"]
 
 }

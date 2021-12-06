@@ -489,9 +489,16 @@ public class Map {
                     if (temp.getLength() == 0) {
                         name = temp.getName();
                         // str.append(name);
-                        str.append(name + " -- ");
+                        str.append(name);
+
+                        if(temp.getEdge() == null){
+                            str.append("\n");
+                        }
+                        else if(temp.getEdge().getLength()==0){
+                            str.append("\n");
+                        }
                     } else {
-                        str.append(temp.getName() + " [label=\"length is: " + temp.getLength() + "\"]");
+                        str.append(" -- "+ temp.getName() + " [label=\"length is: " + temp.getLength() + "\"]");
                         str.append("\n");
                     }
 
