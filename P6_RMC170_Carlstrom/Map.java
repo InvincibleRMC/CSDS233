@@ -463,10 +463,20 @@ public class Map {
         // If it gets here this is a bad time
         return true;
     }
-    
-    //  public final int shortestPath(String source, String destination) {
+    /*
+      public final int shortestPath(String source, String destination) {
       
-    //  }
+        for(int i =0; i <map.length;i++){
+
+            Node temp = map[i];
+
+
+            
+
+        }
+
+      }
+      */
       
      /* public final List<String> shortestPath(String soucre, String destination) {
      * 
@@ -660,7 +670,7 @@ public class Map {
                             str.append("\n");
                         }
                     } else {
-                        str.append(name + " -- " + temp.getName() + " [label=\"length is: " + temp.getLength() + "\"]");
+                        str.append(name + " -- " + temp.getName() + " [label=\"length is: " + temp.getLength() + "\"];");
                         str.append("\n");
                     }
 
