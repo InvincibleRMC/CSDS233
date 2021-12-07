@@ -3,6 +3,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,8 +25,8 @@ public class Map {
         try {
 
             simpleTest();
-            mediumTest();
-            randomizedTest();
+          //  mediumTest();
+          //  randomizedTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,6 +40,12 @@ public class Map {
         m.addBuilding("hello");
         m.addRoad("hi", "hello", 5);
         m.removeBuilding("the");
+
+        Collection<String> col = new ArrayList<String>();
+        col.add("yes");
+        col.add("nice");
+        col.add("meet");
+        m.addRoads("the", col, 10);
         System.out.println(m);
         m.graphToTXT();
 
