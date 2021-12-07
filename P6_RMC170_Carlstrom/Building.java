@@ -67,24 +67,14 @@ public class Building {
 
     // package private for restricted access
     boolean addRoad(Building to, int length) {
-
-        System.out.println("Before Road exixts check");
-
         if (roads.containsKey(to.name)) {
             // already conntected a road fom here to there
-            System.out.println("Code thinks road exists");
             return false;
         }
-        System.out.println("roads.toString() " + roads.toString());
         roads.put(to.name, length);
-
-        System.out.println("roads.toString() " + roads.toString());
         heap = null;
 
-        System.out.println("printing out all roads");
-        for (String key: roads.keySet()){  
-			System.out.println(key+ " = " + roads.get(key));
-		} 
+        
 
         return true;
     }
@@ -95,15 +85,21 @@ public class Building {
      * package private for restricted access
      */
     void remove(Map map) {
-        for (String to : roads.keySet()) {
-            map.removeRoad(name, to);
+
+        Object[] input =(roads.keySet()).toArray();
+        for (int i =0; i<input.length;i++) {
+            System.out.println("remove road loop "+ (String) input[i]);
+            
+            map.removeRoad(name, (String) input[i]);
         }
+
+
     }
 
     // package private for restricted access
     boolean removeRoad(Building to) {
         if (!roads.containsKey(to.name)) {
-            // no road connectecting fom here to there
+            // no road connecting fom here to there
             return false;
         }
         roads.remove(to.name);

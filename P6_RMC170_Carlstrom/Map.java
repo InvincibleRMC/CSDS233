@@ -14,58 +14,58 @@ import java.util.List;
  */
 public class Map {
 
-    private final HashMap<String,Building> map = new HashMap<String,Building>();
+    private final HashMap<String, Building> map = new HashMap<String, Building>();
 
-    public Map() {}
+    public Map() {
+    }
 
     public static void main(String[] args) {
-        // Map m = new Map();
-        // m.addBuilding("The");
-        // m.addBuilding("Hello");
-        // m.addRoad("Hi", "Hello", 5);
-
-        Map cry = new Map();
-
-        //Map m = generateRandomGraph(25);
 
         try {
-            
-              cry.graphToTXT();
-              /*
-              Thread.sleep(2000);
-              cry.removeBuilding("the");
-              cry.graphToTXT();
-              Thread.sleep(2000);
-              */
-              cry.addRoad("was", "the", 5);
-              cry.addRoad("was", "I", 16);
-              cry.addRoad("was", "other", 21);
-              cry.graphToTXT();
-              
-              System.out.println(cry);
-             
 
-
-             /*
-            System.out.println(m);
-
-            m.addRoad("I", "for", 10);
-            m.addRoad("I", "be", 10);
-
-            m.graphToTXT();
-            Thread.sleep(5000);
-            m.removeBuilding("a");
-            m.graphToTXT();
-            */
-
-          //  for (Integer key: map.keySet()){  
-            //    System.out.println(key+ " = " + map.get(key));
-            //} 
+            simpleTest();
+            mediumTest();
+            randomizedTest();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public static void simpleTest() throws IOException {
+
+        Map m = new Map();
+        m.addBuilding("the");
+        m.addBuilding("hello");
+        m.addRoad("hi", "hello", 5);
+        m.removeBuilding("the");
+        System.out.println(m);
+        m.graphToTXT();
+
+    }
+
+    public static void mediumTest() throws IOException {
+        Map m = generateGraph();
+
+        m.addRoad("was", "the", 5);
+        m.addRoad("was", "I", 16);
+        m.addRoad("was", "other", 21);
+        m.removeBuilding("the");
+
+        System.out.println(m);
+        m.graphToTXT();
+
+    }
+
+    public static void randomizedTest() throws IOException {
+        Map m = generateRandomGraph(20);
+
+        m.addRoad("I", "for", 10);
+        m.addRoad("I", "be", 10);
+        m.removeBuilding("a");
+
+        System.out.println(m);
+        m.graphToTXT();
     }
 
     public final boolean addBuilding(String name) {
@@ -90,24 +90,24 @@ public class Map {
         Building building = map.get(name);
         if (building == null) {
             addBuilding(name);
-            building =getBuilding(name);
-            //throw new IllegalArgumentException("no building found for " + name);
+            building = getBuilding(name);
+            // throw new IllegalArgumentException("no building found for " + name);
         }
         return building;
     }
 
-
     public final boolean addRoad(String fromBuilding, String toBuilding, int length) {
         System.out.println("Adding Road:" + fromBuilding + " " + toBuilding);
+
         Building from = getBuilding(fromBuilding);
-        Building to = getBuilding(fromBuilding);
+        Building to = getBuilding(toBuilding);
 
         System.out.println(toString());
-
 
         if (length < 0) {
             throw new IllegalArgumentException("length < 0: " + length);
         }
+
         boolean step1 = from.addRoad(to, length);
         boolean step2 = to.addRoad(from, length);
         return step1 && step2;
@@ -130,7 +130,6 @@ public class Map {
 
         building.remove(this);
 
-      
         return true;
     }
 
@@ -138,7 +137,7 @@ public class Map {
 
         System.out.println("Removing Road:" + fromBuilding + " " + toBuilding);
         Building from = getBuilding(fromBuilding);
-        Building to = getBuilding(fromBuilding);
+        Building to = getBuilding(toBuilding);
         boolean step1 = from.removeRoad(to);
         boolean step2 = to.removeRoad(from);
         return step1 && step2;
@@ -200,7 +199,7 @@ public class Map {
 
             String fromBuilding = common[i];
             String toBuilding = common[size - i - 1];
-            
+
             if (!fromBuilding.equals(toBuilding)) {
                 m.addRoad(fromBuilding, toBuilding, (int) (Math.random() * 256));
                 try {
@@ -217,7 +216,7 @@ public class Map {
 
             String fromBuilding = common[(int) Math.random() * size];
             String toBuilding = common[(int) Math.random() * size];
-            
+
             if (!fromBuilding.equals(toBuilding)) {
                 m.addRoad(fromBuilding, toBuilding, (int) (Math.random() * 256));
                 try {
@@ -269,14 +268,12 @@ public class Map {
             e.printStackTrace();
         }
 
-        
-
         for (int i = 0; i < size; i++) {
 
             while (Math.random() < 0.90) {
                 String fromBuilding = common[i];
                 String toBuilding = common[(int) (Math.random() * (common.length - size) + size)];
-          
+
                 if (!fromBuilding.equals(toBuilding)) {
                     m.addRoad(fromBuilding, toBuilding, (int) (Math.random() * 256));
                     try {
@@ -313,19 +310,18 @@ public class Map {
 
             for (Building building : map.values()) {
                 String name = building.getName();
-                HashMap<String,Integer> roads = building.getRoads();
+                HashMap<String, Integer> roads = building.getRoads();
 
-                int counter=0;
+                int counter = 0;
 
-                
-                for (HashMap.Entry<String,Integer> entry : roads.entrySet()) {
+                for (HashMap.Entry<String, Integer> entry : roads.entrySet()) {
                     counter++;
                     String destination = entry.getKey();
                     int length = entry.getValue();
-                    System.out.println(name + " " +destination + " " + length + " " + counter);
+                   //System.out.println(name + " " + destination + " " + length + " " + counter);
                     out.write(name
-                              + " -- " + destination
-                              + " [label=\"length is: " + length + "\"];\n");
+                            + " -- " + destination
+                            + " [label=\"length is: " + length + "\"];\n");
                 }
             }
             out.write("}\n");
