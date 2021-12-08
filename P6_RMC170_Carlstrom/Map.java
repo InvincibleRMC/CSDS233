@@ -37,6 +37,8 @@ public class Map {
         }
     }
 
+
+    // Basic Test
     public static void simpleTest() throws IOException {
 
         Map m = new Map();
@@ -56,10 +58,16 @@ public class Map {
         System.out.println("Testing algorithms");
         System.out.println(m.shortestPath("the","nice"));
         System.out.println(m.shortestLength("the", "nice"));
-        System.out.println(m.shortestLength("the", "hello"));
 
+        // Test not connectedess
+        try{
+            m.shortestLength("the", "hello");
+            throw new AssertionError();
+        } 
+        catch (IllegalArgumentException expected){}
     }
 
+    // Medium test
     public static void mediumTest() throws IOException {
         Map m = generateGraph();
 
@@ -73,6 +81,7 @@ public class Map {
 
     }
 
+    // Super randomize test
     public static void randomizedTest() throws IOException {
         Map m = generateRandomGraph(20);
 
@@ -84,6 +93,7 @@ public class Map {
         m.graphToTXT();
     }
 
+    // Adds building to the map
     public final boolean addBuilding(String name) {
         if (name == null) {
             throw new IllegalArgumentException("name == null");
@@ -96,8 +106,8 @@ public class Map {
     }
 
     /**
-     * Throws IllegalArgumentException if the requested building name
-     * is null or the building has not been added.
+     * Throws IllegalArgumentException if the requested building name is null
+     * Automatically adds new buildings when neccasary
      */
     private Building getBuilding(String name) {
         if (name == null) {
@@ -107,14 +117,15 @@ public class Map {
         if (building == null) {
             addBuilding(name);
             building = getBuilding(name);
-            // throw new IllegalArgumentException("no building found for " + name);
-        }
+           }
         return building;
     }
 
+    // Adds a road from fromBuilding to toBuilding of a length length
     public final boolean addRoad(String fromBuilding, String toBuilding, int length) {
         System.out.println("Adding Road:" + fromBuilding + " " + toBuilding);
 
+        // Gets buildings and adds them if they don't exists
         Building from = getBuilding(fromBuilding);
         Building to = getBuilding(toBuilding);
 
@@ -124,11 +135,13 @@ public class Map {
             throw new IllegalArgumentException("length < 0: " + length);
         }
 
+        // Adds Road one way then the other
         boolean step1 = from.addRoad(to, length);
         boolean step2 = to.addRoad(from, length);
         return step1 && step2;
     }
 
+    // Adds mutiple roads by calling addRoad mutiple times
     public final boolean addRoads(String fromBuilding, Collection<String> toBuildings, int length) {
         boolean noDuplicateRoadFound = true;
         for (String toBuilding : toBuildings) {
@@ -139,6 +152,8 @@ public class Map {
         return noDuplicateRoadFound;
     }
 
+    // removes a building from a map
+    // also removes roads connected to the building
     public final boolean removeBuilding(String name) {
 
         Building building = getBuilding(name);
@@ -149,6 +164,7 @@ public class Map {
         return true;
     }
 
+    // removes road
     public final boolean removeRoad(String fromBuilding, String toBuilding) {
 
         System.out.println("Removing Road:" + fromBuilding + " " + toBuilding);
@@ -159,6 +175,7 @@ public class Map {
         return step1 && step2;
     }
 
+    // returns the shortestLength of
     public final int shortestLength(String source, String destination) {
         List<String> path = shortestPath(source, destination);
 
@@ -172,6 +189,7 @@ public class Map {
         return length;
     }
 
+    // QueueNode for getting shortest path
     public class QueueNode implements Comparable<QueueNode> {
 
         String buildingName;
@@ -182,7 +200,7 @@ public class Map {
             currDistance = dist;
         }
 
-
+        // comparing two QueueNode
         @Override
         public int compareTo(Map.QueueNode b) {
             if (currDistance > b.currDistance) {
@@ -194,12 +212,13 @@ public class Map {
             return 0;
         }
 
-       
-        
     }
 
+    // List of shortest path
     public final List<String> shortestPath(String source, String destination) {
 
+
+        // find shortest distance num
         HashMap<String, Integer> distances = new HashMap<>();
 
         for (String buildingName : map.keySet()) {
@@ -220,11 +239,11 @@ public class Map {
 
                 int currLength = distances.get(current.buildingName);
                 int currWeight = distanceToEntry.getValue();
-                int newLength = currLength+currWeight;
-                if(newLength<0){
-                    //System.out.
+                int newLength = currLength + currWeight;
+                if (newLength < 0) {
+                    // System.out.
                     System.out.println(current.buildingName);
-                    System.out.println(currLength+ " " + currWeight);
+                    System.out.println(currLength + " " + currWeight);
                     throw new IllegalStateException();
                 }
                 int oldLength = distances.get(distanceToEntry.getKey());
@@ -239,14 +258,14 @@ public class Map {
 
         }
 
-        // find shortestDistance 
+        // find shortestDistance
         int shortestDistance = distances.get(destination);
         System.out.println(distances);
         // Now go back to find the path
         LinkedList<String> result = new LinkedList<String>();
         result.push(destination);
 
-        if(shortestDistance==Integer.MAX_VALUE){
+        if (shortestDistance == Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Destination unreachable");
         }
 
@@ -280,6 +299,7 @@ public class Map {
         throw new IllegalArgumentException("TODO");
     }
 
+    // generate a stock graph
     public static Map generateGraph() {
         String[] common = { "the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he",
                 "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this",
@@ -324,23 +344,6 @@ public class Map {
 
         }
 
-        for (int i = 0; i < size * 5; i++) {
-
-            String fromBuilding = common[(int) Math.random() * size];
-            String toBuilding = common[(int) Math.random() * size];
-
-            if (!fromBuilding.equals(toBuilding)) {
-                m.addRoad(fromBuilding, toBuilding, (int) (Math.random() * 256));
-                try {
-                    m.graphToTXT();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println(m);
-            }
-
-        }
-
         try {
             m.graphToTXT();
         } catch (IOException e) {
@@ -351,6 +354,7 @@ public class Map {
         return m;
     }
 
+    // Generates a very super randomized graph
     public static Map generateRandomGraph(int size) {
         String[] common = { "the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he",
                 "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this",
@@ -408,6 +412,7 @@ public class Map {
         return m;
     }
 
+    // Writer for graphToTXT();
     private void graphToTXT() throws IOException {
         try (Writer out = new BufferedWriter(new FileWriter("P6_RMC170_Carlstrom/graph.dot"))) {
             graphToTXT(out);
