@@ -5,12 +5,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
-
-
+import java.lang.Comparable;
 
 /**
  * javac P6_RMC170_Carlstrom/Map.java && java P6_RMC170_Carlstrom.Map
@@ -28,8 +29,8 @@ public class Map {
         try {
 
             simpleTest();
-          //  mediumTest();
-          //  randomizedTest();
+            // mediumTest();
+            // randomizedTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,6 +52,11 @@ public class Map {
         m.addRoads("the", col, 10);
         System.out.println(m);
         m.graphToTXT();
+
+        System.out.println("Testing algorithms");
+        System.out.println(m.shortestPath("the","nice"));
+        System.out.println(m.shortestLength("the", "nice"));
+        System.out.println(m.shortestLength("the", "hello"));
 
     }
 
@@ -166,66 +172,101 @@ public class Map {
         return length;
     }
 
-    public class QueueNode{
+    public class QueueNode implements Comparable<QueueNode> {
 
         String buildingName;
         int currDistance;
-    
-        QueueNode(String name,int dist){
+
+        QueueNode(String name, int dist) {
             buildingName = name;
             currDistance = dist;
         }
+
+
+        @Override
+        public int compareTo(Map.QueueNode b) {
+            if (currDistance > b.currDistance) {
+                return 1;
+            }
+            if (currDistance < b.currDistance) {
+                return -1;
+            }
+            return 0;
+        }
+
+       
+        
     }
-    
 
     public final List<String> shortestPath(String source, String destination) {
-       
+
         Building start = getBuilding(source);
 
-        HashMap<String,Integer> distances = new HashMap<>();
+        HashMap<String, Integer> distances = new HashMap<>();
 
-        for (String buildingName : map.keySet()){
+        for (String buildingName : map.keySet()) {
             distances.put(buildingName, Integer.MAX_VALUE);
         }
+        distances.put(source, 0);
 
         PriorityQueue<QueueNode> pq = new PriorityQueue<QueueNode>();
         pq.add(new QueueNode(source, 0));
 
-        while (pq.size() > 0){
+        while (pq.size() > 0) {
 
             QueueNode current = pq.poll();
             Building currBuilding = getBuilding(current.buildingName);
             HashMap<String, Integer> currRoads = currBuilding.getRoads();
 
+            for (HashMap.Entry<String, Integer> distanceToEntry : currRoads.entrySet()) {
 
-            for (HashMap.Entry<String,Integer> distanceToEntry : currRoads.entrySet()) {
-
-                int currLength = distances.get(current);
+                int currLength = distances.get(current.buildingName);
                 int currWeight = distanceToEntry.getValue();
-                int oldLength = distances.get(distanceToEntry);
-               
-               if(currLength+currWeight<oldLength){
-                   String nodeName =distanceToEntry.getKey();
-                    distances.put(nodeName, currWeight+currLength);
-                    pq.add(new QueueNode(nodeName,distances.get(nodeName)));
-               }
+                int newLength = currLength+currWeight;
+                if(newLength<0){
+                    //System.out.
+                    System.out.println(current.buildingName);
+                    System.out.println(currLength+ " " + currWeight);
+                    throw new IllegalStateException();
+                }
+                int oldLength = distances.get(distanceToEntry.getKey());
 
-            
+                if (newLength < oldLength) {
+                    String nodeName = distanceToEntry.getKey();
+                    distances.put(nodeName, newLength);
+                    pq.add(new QueueNode(nodeName, distances.get(nodeName)));
+                }
+
             }
-            
 
         }
-       
-       int shortestDistance = distances.get(destination);
 
+        // find shortestDistance 
+        int shortestDistance = distances.get(destination);
+        System.out.println(distances);
+        // Now go back to find the path
+        LinkedList<String> result = new LinkedList<String>();
+        result.push(destination);
+        while (true) {
 
+            String currentBuildingName = result.peek();
+            Building currentBuilding = getBuilding(currentBuildingName);
+            HashMap<String, Integer> currentRoads = currentBuilding.getRoads();
 
+            for (HashMap.Entry<String, Integer> road : currentRoads.entrySet()) {
 
-       
-    //   return 
-       
-       
-        throw new IllegalArgumentException("TODO");
+                String destinationBuilding = road.getKey();
+                int distance = road.getValue();
+                if (distance <= shortestDistance) {
+                    result.push(destinationBuilding);
+                    if (destinationBuilding.equals(source)) {
+                        return result;
+                    }
+                }
+
+            }
+
+        }
     }
 
     public final int minimumTotalLength() {
@@ -386,7 +427,7 @@ public class Map {
                     counter++;
                     String destination = entry.getKey();
                     int length = entry.getValue();
-                   //System.out.println(name + " " + destination + " " + length + " " + counter);
+                    // System.out.println(name + " " + destination + " " + length + " " + counter);
                     out.write(name
                             + " -- " + destination
                             + " [label=\"length is: " + length + "\"];\n");
