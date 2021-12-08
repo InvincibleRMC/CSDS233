@@ -64,6 +64,9 @@ public class Map {
             throw new AssertionError();
         } catch (IllegalArgumentException expected) {
         }
+
+
+        System.out.println(m.secondShortestPath("the", "nice"));
     }
 
     // Medium test
@@ -176,7 +179,16 @@ public class Map {
 
     // returns the shortestLength of
     public final int shortestLength(String source, String destination) {
+
+        if(source==null){
+            throw new IllegalArgumentException("source == null");
+        }
+        if(destination==null){
+            throw new IllegalArgumentException("destionation == null");
+        }
         List<String> path = shortestPath(source, destination);
+
+        System.out.println(path);
 
         int length = 0;
         Iterator<String> i = path.iterator();
