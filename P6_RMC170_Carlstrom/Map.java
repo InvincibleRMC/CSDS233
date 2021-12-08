@@ -65,7 +65,9 @@ public class Map {
         } catch (IllegalArgumentException expected) {
         }
 
-
+        // WARNING this does not currently work
+        // It currently doubles back to far and reuses nodes which Dijkstra's does not
+        // handle
         System.out.println(m.secondShortestPath("the", "nice"));
     }
 
@@ -180,10 +182,10 @@ public class Map {
     // returns the shortestLength of
     public final int shortestLength(String source, String destination) {
 
-        if(source==null){
+        if (source == null) {
             throw new IllegalArgumentException("source == null");
         }
-        if(destination==null){
+        if (destination == null) {
             throw new IllegalArgumentException("destionation == null");
         }
         List<String> path = shortestPath(source, destination);
@@ -302,6 +304,7 @@ public class Map {
     }
 
     public final int minimumTotalLength() {
+
         throw new IllegalArgumentException("TODO");
     }
 
@@ -319,21 +322,21 @@ public class Map {
 
             String toBuilding = i.next();
 
-            HashMap<String,Integer> roads = getBuilding(fromBuilding).getRoads();
+            HashMap<String, Integer> roads = getBuilding(fromBuilding).getRoads();
 
             distanceSoFar += roads.get(toBuilding);
             for (HashMap.Entry<String, Integer> entry : roads.entrySet()) {
                 String roadDestination = entry.getKey();
                 int roadLength = entry.getValue();
 
-                if(roadDestination.equals(toBuilding)){
+                if (roadDestination.equals(toBuilding)) {
                     continue;
                 }
                 int distanceToEnd = distanceSoFar + roadLength + shortestLength(roadDestination, destination);
-                if(distanceToEnd<secondShortestDistanceSoFar){
-                    secondShortestDistanceSoFar=distanceToEnd;
+                if (distanceToEnd < secondShortestDistanceSoFar) {
+                    secondShortestDistanceSoFar = distanceToEnd;
                 }
-                
+
             }
         }
         return secondShortestDistanceSoFar;
