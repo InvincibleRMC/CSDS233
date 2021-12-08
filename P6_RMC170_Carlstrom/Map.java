@@ -200,8 +200,6 @@ public class Map {
 
     public final List<String> shortestPath(String source, String destination) {
 
-        Building start = getBuilding(source);
-
         HashMap<String, Integer> distances = new HashMap<>();
 
         for (String buildingName : map.keySet()) {
@@ -247,6 +245,11 @@ public class Map {
         // Now go back to find the path
         LinkedList<String> result = new LinkedList<String>();
         result.push(destination);
+
+        if(shortestDistance==Integer.MAX_VALUE){
+            throw new IllegalArgumentException("Destination unreachable");
+        }
+
         while (true) {
 
             String currentBuildingName = result.peek();
