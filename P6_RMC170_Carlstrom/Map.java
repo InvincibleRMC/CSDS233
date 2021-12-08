@@ -37,7 +37,6 @@ public class Map {
         }
     }
 
-
     // Basic Test
     public static void simpleTest() throws IOException {
 
@@ -56,15 +55,15 @@ public class Map {
         m.graphToTXT();
 
         System.out.println("Testing algorithms");
-        System.out.println(m.shortestPath("the","nice"));
+        System.out.println(m.shortestPath("the", "nice"));
         System.out.println(m.shortestLength("the", "nice"));
 
         // Test not connectedess
-        try{
+        try {
             m.shortestLength("the", "hello");
             throw new AssertionError();
-        } 
-        catch (IllegalArgumentException expected){}
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     // Medium test
@@ -117,7 +116,7 @@ public class Map {
         if (building == null) {
             addBuilding(name);
             building = getBuilding(name);
-           }
+        }
         return building;
     }
 
@@ -217,7 +216,6 @@ public class Map {
     // List of shortest path
     public final List<String> shortestPath(String source, String destination) {
 
-
         // find shortest distance num
         HashMap<String, Integer> distances = new HashMap<>();
 
@@ -295,8 +293,40 @@ public class Map {
         throw new IllegalArgumentException("TODO");
     }
 
+    // Finds the second shortest path
     public final int secondShortestPath(String source, String destination) {
-        throw new IllegalArgumentException("TODO");
+
+        List<String> path = shortestPath(source, destination);
+
+        int distanceSoFar = 0;
+        int secondShortestDistanceSoFar = Integer.MAX_VALUE;
+        Iterator<String> i = path.iterator();
+        String fromBuilding = i.next();
+
+        while (i.hasNext()) {
+
+            String toBuilding = i.next();
+
+            HashMap<String,Integer> roads = getBuilding(fromBuilding).getRoads();
+
+            distanceSoFar += roads.get(toBuilding);
+            for (HashMap.Entry<String, Integer> entry : roads.entrySet()) {
+                String roadDestination = entry.getKey();
+                int roadLength = entry.getValue();
+
+                if(roadDestination.equals(toBuilding)){
+                    continue;
+                }
+                int distanceToEnd = distanceSoFar + roadLength + shortestLength(roadDestination, destination);
+                if(distanceToEnd<secondShortestDistanceSoFar){
+                    secondShortestDistanceSoFar=distanceToEnd;
+                }
+                
+            }
+        }
+        return secondShortestDistanceSoFar;
+
+        // throw new IllegalArgumentException("TODO");
     }
 
     // generate a stock graph
@@ -429,10 +459,8 @@ public class Map {
                 String name = building.getName();
                 HashMap<String, Integer> roads = building.getRoads();
 
-                int counter = 0;
-
                 for (HashMap.Entry<String, Integer> entry : roads.entrySet()) {
-                    counter++;
+
                     String destination = entry.getKey();
                     int length = entry.getValue();
                     // System.out.println(name + " " + destination + " " + length + " " + counter);

@@ -8,16 +8,6 @@ public class Building {
 
     // Map with keys of buildings reachable from here, with values of the path length
     private final HashMap<String,Integer> roads = new HashMap<String,Integer>();
-
-    private static class Road {
-        String destination;
-        int length;
-
-        Road(String destination, int length) {
-            this.destination = destination;
-            this.length = length;
-        }
-    }
     
     // package private for restricted access
     String getName() {
