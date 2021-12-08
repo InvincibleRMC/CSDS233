@@ -303,7 +303,18 @@ public class Map {
         }
     }
 
+    // Create the smallest graph and up the segments
     public final int minimumTotalLength() {
+
+        // Create the set of buildings you haven't visited
+        // take one out and add to the reached building
+        // Add all the nodes touching the starting one into the priority queue
+        // take the next one out from A to B
+        // Determine if B has been checked 
+        // If it has not been reach add all of the nodes touching B into the priorty queue
+        // loop through until the queue is empty
+
+        //If the tree is not fully connected throw Illegal Argument excception
 
         throw new IllegalArgumentException("TODO");
     }
