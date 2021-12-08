@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,9 +27,10 @@ public class Map {
 
         try {
 
+            //tests
             simpleTest();
-            // mediumTest();
-            // randomizedTest();
+            mediumTest();
+            randomizedTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class Map {
         // WARNING this does not currently work
         // It currently doubles back to far and reuses nodes which Dijkstra's does not
         // handle
-        System.out.println(m.secondShortestPath("the", "nice"));
+       //  System.out.println(m.secondShortestPath("the", "nice"));
     }
 
     // Medium test
