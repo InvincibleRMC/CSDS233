@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
+
+
 
 /**
  * javac P6_RMC170_Carlstrom/Map.java && java P6_RMC170_Carlstrom.Map
@@ -150,7 +153,7 @@ public class Map {
         return step1 && step2;
     }
 
-    public final int shortestPathLength(String source, String destination) {
+    public final int shortestLength(String source, String destination) {
         List<String> path = shortestPath(source, destination);
 
         int length = 0;
@@ -163,7 +166,65 @@ public class Map {
         return length;
     }
 
+    public class QueueNode{
+
+        String buildingName;
+        int currDistance;
+    
+        QueueNode(String name,int dist){
+            buildingName = name;
+            currDistance = dist;
+        }
+    }
+    
+
     public final List<String> shortestPath(String source, String destination) {
+       
+        Building start = getBuilding(source);
+
+        HashMap<String,Integer> distances = new HashMap<>();
+
+        for (String buildingName : map.keySet()){
+            distances.put(buildingName, Integer.MAX_VALUE);
+        }
+
+        PriorityQueue<QueueNode> pq = new PriorityQueue<QueueNode>();
+        pq.add(new QueueNode(source, 0));
+
+        while (pq.size() > 0){
+
+            QueueNode current = pq.poll();
+            Building currBuilding = getBuilding(current.buildingName);
+            HashMap<String, Integer> currRoads = currBuilding.getRoads();
+
+
+            for (HashMap.Entry<String,Integer> distanceToEntry : currRoads.entrySet()) {
+
+                int currLength = distances.get(current);
+                int currWeight = distanceToEntry.getValue();
+                int oldLength = distances.get(distanceToEntry);
+               
+               if(currLength+currWeight<oldLength){
+                   String nodeName =distanceToEntry.getKey();
+                    distances.put(nodeName, currWeight+currLength);
+                    pq.add(new QueueNode(nodeName,distances.get(nodeName)));
+               }
+
+            
+            }
+            
+
+        }
+       
+       int shortestDistance = distances.get(destination);
+
+
+
+
+       
+    //   return 
+       
+       
         throw new IllegalArgumentException("TODO");
     }
 
